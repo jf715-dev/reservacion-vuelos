@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agencia de Viajes - Reservación de Vuelos</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body class="page">
+    <!-- Off-Canvas Menu -->
+    <nav class="menu-lateral" id="menu-lateral">
+        <div class="menu-lateral__cabecera">
+            <h2 class="menu-lateral__titulo">Agencia de Viajes</h2>
+            <button class="boton boton--icono menu-lateral__cerrar" id="cerrar-menu-lateral">&times;</button>
+        </div>
+        <ul class="menu-lateral__lista">
+            <li class="menu-lateral__elemento"><a href="#" class="menu-lateral__enlace menu-lateral__enlace--activo"
+                    data-target="vista-inicio">Inicio</a></li>
+            <li class="menu-lateral__elemento"><a href="#" class="menu-lateral__enlace"
+                    data-target="vista-admin">Administración de Vuelos</a></li>
+            <li class="menu-lateral__elemento"><a href="#" class="menu-lateral__enlace"
+                    data-target="vista-reservar">Reservar</a></li>
+            <li class="menu-lateral__elemento"><a href="#" class="menu-lateral__enlace"
+                    data-target="vista-mis-reservas">Mis Reservas</a></li>
+        </ul>
+    </nav>
+
+    <!-- Overlay -->
+    <div class="capa-oscura" id="capa-oscura"></div>
+
+    <!-- Main Content -->
+    <main class="contenido-principal">
+        <!-- Header -->
+        <encabezado class="encabezado">
+            <div class="encabezado__izquierda">
+                <button class="boton boton--icono encabezado__boton-menu" id="abrir-menu-lateral">
+                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <h1 class="encabezado__logo">Agencia de Viajes</h1>
+            </div>
+            <div id="estado-autenticacion">
+                <button class="boton boton--secundario" id="btn-vista-registro">Registrarse</button>
+                <button class="boton boton--primario encabezado__auth" id="btn-vista-ingreso">Iniciar Sesión</button>
+            </div>
+        </encabezado>
+
+        <!-- Views Container -->
+        <div class="vistas">
+
+            <!-- Home View -->
+            <section class="vista vista--activa" id="vista-inicio">
+                <div class="portada">
+                    <p class="portada__subtitulo">LISTO PARA EL DESPEGUE</p>
+                    <h2 class="portada__titulo">SERVICIO DE RESERVACION<br> DE VUELOS EN LINEA</h2>
+
+                    <div class="search-widget">
+                        <div class="search-widget__types">
+                            <button class="boton btn--pill btn--pill-active">Solo ida</button>
+                            <button class="boton btn--pill">Ida y vuelta</button>
+                            <button class="boton btn--pill">Multiciudad</button>
+                        </div>
+                        <div class="search-widget__inputs">
+                            <div class="grupo-entrada">
+                                <label class="grupo-entrada__etiqueta">Origen</label>
+                                <input type="text" class="grupo-entrada__campo" value="Tokio, Japón" readonly>
+                            </div>
+                            <div class="grupo-entrada">
+                                <label class="grupo-entrada__etiqueta">Destino</label>
+                                <input type="text" class="grupo-entrada__campo" value="Berlín, Alemania" readonly>
+                            </div>
+                            <div class="grupo-entrada">
+                                <label class="grupo-entrada__etiqueta">Salida</label>
+                                <input type="text" class="grupo-entrada__campo" value="11 Oct, 2023" readonly>
+                            </div>
+                            <div class="grupo-entrada">
+                                <label class="grupo-entrada__etiqueta">Regreso</label>
+                                <input type="text" class="grupo-entrada__campo" value="15 Dic, 2023" readonly>
+                            </div>
+                            <button class="boton boton--busqueda">
+                                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Admin View -->
+            <section class="vista" id="vista-admin">
+                <div class="contenedor">
+                    <h2 class="vista__titulo">Administración de Vuelos</h2>
+                    <p class="vista__descripcion">Programa nuevos vuelos y selecciona el modelo de aeronave.</p>
+
+                    <form class="formulario" id="formulario-admin">
+                        <div class="formulario__grupo">
+                            <label for="numero-vuelo" class="formulario__etiqueta">Número de Vuelo</label>
+                            <input type="text" id="numero-vuelo" class="formulario__campo" required
+                                placeholder="Ej: TA-104">
+                        </div>
+                        <div class="formulario__grupo">
+                            <label for="destino-vuelo" class="formulario__etiqueta">Destino</label>
+                            <input type="text" id="destino-vuelo" class="formulario__campo" required
+                                placeholder="Ej: Berlin, Germany">
+                        </div>
+                        <div class="formulario__grupo">
+                            <label for="modelo-avion" class="formulario__etiqueta">Modelo de Aeronave</label>
+                            <select id="modelo-avion" class="formulario__campo" required>
+                                <option value="" disabled selected>Seleccione un modelo</option>
+                                <option value="ATR 72">ATR 72 (Regionales Cortos, 2-2)</option>
+                                <option value="Airbus A320">Airbus A320 (Medio Alcance, 3-3)</option>
+                                <option value="Boeing 767">Boeing 767 (Internacionales Medianos, 2-3-2)</option>
+                                <option value="Airbus A330">Airbus A330 (Intercontinentales, 2-4-2)</option>
+                                <option value="Boeing 777">Boeing 777 (Larga Distancia, 3-4-3)</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="boton boton--primario formulario__enviar">Crear Vuelo</button>
+                    </form>
+
+                    <div class="lista-vuelos mt-4" id="lista-vuelos-admin">
+                        <!-- Lista de vuelos programados -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reserve View (Pasajeros) -->
+            <section class="vista" id="vista-reservar">
+                <div class="contenedor">
+                    <h2 class="vista__titulo">Nueva Reserva</h2>
+                    <p class="vista__descripcion">Selecciona un vuelo y registra a los pasajeros.</p>
+
+                    <div class="formulario__grupo">
+                        <label for="selector-vuelo-reserva" class="formulario__etiqueta">Vuelo Disponible</label>
+                        <select id="selector-vuelo-reserva" class="formulario__campo">
+                            <option value="" disabled selected>Seleccione un vuelo</option>
+                            <!-- Vuelos disponibles -->
+                        </select>
+                    </div>
+
+                    <div id="seccion-pasajeros" class="oculto mt-4">
+                        <h3 class="vista__subtitulo">Pasajeros</h3>
+                        <form class="form formulario--pasajero" id="formulario-agregar-pasajero">
+                            <div class="formulario__fila">
+                                <div class="formulario__grupo">
+                                    <label class="formulario__etiqueta">Nombre Completo</label>
+                                    <input type="text" id="nombre-pasajero" class="formulario__campo" required>
+                                </div>
+                                <div class="formulario__grupo">
+                                    <label class="formulario__etiqueta">Edad</label>
+                                    <input type="number" id="edad-pasajero" class="formulario__campo" min="1" max="110"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="formulario__grupo formulario__grupo--checkbox">
+                                <input type="checkbox" id="discapacidad-pasajero" class="formulario__checkbox">
+                                <label for="discapacidad-pasajero"
+                                    class="formulario__etiqueta formulario__etiqueta--inline">¿Discapacidad o necesidad
+                                    especial?</label>
+                            </div>
+                            <button type="submit" class="boton boton--secundario">Añadir Pasajero</button>
+                        </form>
+
+                        <div class="lista-pasajeros mt-4" id="lista-pasajeros">
+                            <!-- Pasajeros añadidos temporalmente -->
+                        </div>
+
+                        <div class="formulario__acciones mt-4">
+                            <button id="btn-proceder-asientos" class="boton boton--primario" disabled>Proceder a
+                                Selección de Asientos</button>
+                        </div>
+                        <p id="error-reserva" class="mensaje-error"></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seat Map View -->
+            <section class="vista vista--sin-scroll" id="vista-mapa-asientos">
+                <div class="vista-dividida">
+                    <!-- Left Panel (Reservation Info) -->
+                    <aside class="vista-dividida__panel vista-dividida__panel--info">
+                        <div class="resumen-reserva">
+                            <div class="banner-estado" id="banner-estado-asientos">
+                                <span class="banner-estado__icono">✓</span>
+                                <span class="banner-estado__texto">Selecciona asientos para tus pasajeros</span>
+                            </div>
+
+                            <div class="leyenda">
+                                <div class="leyenda__columna">
+                                    <div class="leyenda__elemento"><span
+                                            class="asiento asiento--excellence asiento--leyenda"></span> Asientos
+                                        Excellence</div>
+                                    <div class="leyenda__elemento"><span
+                                            class="asiento asiento--priority asiento--leyenda"></span> Asientos Priority
+                                    </div>
+                                    <div class="leyenda__elemento"><span
+                                            class="asiento asiento--xl asiento--leyenda"></span> Asientos XL</div>
+                                    <div class="leyenda__elemento"><span
+                                            class="asiento asiento--delantero asiento--leyenda"></span> Filas delanteras
+                                    </div>
+                                    <div class="leyenda__elemento"><span
+                                            class="asiento asiento--trasero asiento--leyenda"></span> Filas traseras
+                                    </div>
+                                </div>
+                                <div class="leyenda__columna">
+                                    <div class="leyenda__elemento"><span
+                                            class="asiento asiento--no-disponible asiento--leyenda"></span> No
+                                        disponible</div>
+                                    <div class="leyenda__elemento"><span
+                                            class="asiento asiento--emergencia asiento--leyenda"></span> Salida
+                                        Emergencia</div>
+                                    <div class="leyenda__elemento"><span
+                                            class="asiento asiento--seleccionado asiento--leyenda"></span> Tu Asiento
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="asignaciones-asientos-pasajeros mt-4" id="asignaciones-asientos-pasajeros">
+                                <!-- La lista de asignaciones irá aquí -->
+                            </div>
+                        </div>
+
+                        <div class="vista-dividida__pie">
+                            <div class="barra-asignacion" id="barra-asignacion">
+                                <div class="barra-asignacion__icono">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                                        <path
+                                            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                                    </svg>
+                                </div>
+                                <span class="barra-asignacion__texto">Asiento Asignado</span>
+                            </div>
+                            <div class="formulario__acciones mt-3">
+                                <button id="btn-confirmar-reserva" class="boton boton--primario w-100"
+                                    disabled>Confirmar Reserva</button>
+                                <button id="btn-cancelar-reserva"
+                                    class="boton boton--secundario w-100 mt-2">Cancelar</button>
+                            </div>
+                        </div>
+                    </aside>
+
+                    <!-- Right Panel (Seat Map) -->
+                    <div class="vista-dividida__panel vista-dividida__panel--mapa">
+                        <div class="cabina-avion" id="cabina-avion">
+                            <!-- Seat Grid Generated via JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Vista de Autenticación -->
+            <section class="vista" id="vista-autenticacion">
+                <div class="contenedor contenedor--pequeno">
+                    <div class="caja-autenticacion">
+                        <button class="boton boton--icono caja-autenticacion__cerrar"
+                            id="btn-cerrar-autenticacion">&times;</button>
+                        <div class="caja-autenticacion__pestanas">
+                            <button class="caja-autenticacion__pestana caja-autenticacion__pestana--activa"
+                                id="pestana-ingreso">Ingresar</button>
+                            <button class="caja-autenticacion__pestana" id="pestana-registro">Registrarse</button>
+                        </div>
+
+                        <!-- Formulario Login -->
+                        <form class="formulario" id="formulario-ingreso">
+                            <h2 class="vista__subtitulo">Bienvenido de nuevo</h2>
+                            <div class="formulario__grupo">
+                                <label class="formulario__etiqueta">Correo electrónico</label>
+                                <input type="email" id="email-ingreso" class="formulario__campo"
+                                    placeholder="correo@ejemplo.com" required>
+                            </div>
+                            <div class="formulario__grupo">
+                                <label class="formulario__etiqueta">Contraseña</label>
+                                <input type="password" id="pass-ingreso" class="formulario__campo"
+                                    placeholder="••••••••" required>
+                            </div>
+                            <button type="submit" class="boton boton--primario w-100">Iniciar Sesión</button>
+                            <p id="error-ingreso" class="mensaje-error"></p>
+                        </form>
+
+                        <!-- Formulario Registro -->
+                        <form class="form oculto" id="formulario-registro">
+                            <h2 class="vista__subtitulo">Crea tu cuenta</h2>
+                            <div class="formulario__grupo">
+                                <label class="formulario__etiqueta">Nombre completo</label>
+                                <input type="text" id="nombre-registro" class="formulario__campo"
+                                    placeholder="Juan Pérez" required>
+                            </div>
+                            <div class="formulario__grupo">
+                                <label class="formulario__etiqueta">Correo electrónico</label>
+                                <input type="email" id="email-registro" class="formulario__campo"
+                                    placeholder="correo@ejemplo.com" required>
+                            </div>
+                            <div class="formulario__grupo">
+                                <label class="formulario__etiqueta">Contraseña</label>
+                                <input type="password" id="pass-registro" class="formulario__campo"
+                                    placeholder="••••••••" required>
+                            </div>
+                            <button type="submit" class="boton boton--primario w-100">Crear Cuenta</button>
+                            <p id="error-registro" class="mensaje-error"></p>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Vista de Impresión / Mis Reservas -->
+            <section class="vista" id="vista-mis-reservas">
+                <div class="contenedor contenedor--pequeno">
+                    <h2 class="vista__titulo">Mis Reservas</h2>
+
+                    <div id="lista-reservas">
+                        <!-- Lista de reservas -->
+                    </div>
+
+                    <div id="detalle-reserva" class="oculto">
+                        <button class="boton boton--secundario mb-3" id="btn-volver-reservas">← Volver a Mis
+                            Reservas</button>
+                        <div class="area-impresion" id="area-impresion">
+                            <!-- Ticket -->
+                        </div>
+                        <button class="boton boton--primario w-100 mt-3" id="btn-revertir-reserva"
+                            style="background-color: #EF4444; border-color: #EF4444;">Revertir Reserva (Solo por 4
+                            horas)</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Pie de Página (Barra Inferior) -->
+        <footer class="footer">
+            <div class="footer__content">
+                <p class="footer__copyright">&copy; 2026 Agencia de Viajes. Todos los derechos reservados.</p>
+                <div class="footer__links">
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
