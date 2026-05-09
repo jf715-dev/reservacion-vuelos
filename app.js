@@ -224,16 +224,16 @@ formAdmin.addEventListener('submit', (e) => {
             const letter = SEAT_LETTERS[c];
             const seatId = `${r}${letter}`;
 
-            let type = "back";
+            let type = "trasero";
             if (r <= 2) type = "excellence";
             else if (r <= 4) type = "priority";
             else if (r === 5) type = "xl";
-            else if (r <= 8) type = "front";
+            else if (r <= 8) type = "delantero";
 
             let isEmergency = false;
             if (r === Math.floor(config.rows / 2) || r === Math.floor(config.rows / 2) + 1) {
                 isEmergency = true;
-                type = "emergency";
+                type = "emergencia";
             }
 
             seats.push({
@@ -253,13 +253,14 @@ formAdmin.addEventListener('submit', (e) => {
 function renderAdminFlights() {
     adminFlightList.innerHTML = flights.length === 0 ? '<p class="texto-silenciado">No hay vuelos programados.</p>' : '';
     flights.forEach(f => {
+        const asientosOcupados = f.seats.filter(s => s.occupiedBy).length;
         adminFlightList.innerHTML += `
             <div class="tarjeta-lista">
                 <div class="tarjeta-lista__info">
                     <span class="tarjeta-lista__title">${f.flightNumber} - Destino: ${f.destination}</span>
                     <span class="tarjeta-lista__subtitle">Aeronave: ${f.model}</span>
                 </div>
-                <div class="tarjeta-lista__badge btn--pill">0 Asientos Ocupados</div>
+                <div class="tarjeta-lista__badge btn--pill">${asientosOcupados} Asientos Ocupados</div>
             </div>
         `;
     });
@@ -399,7 +400,7 @@ function renderAirplaneCabin() {
             lbl.className = 'label'; lbl.textContent = SEAT_LETTERS[colCounter]; encabezadoRow.appendChild(lbl); colCounter++;
         }
         if (layoutIndex < config.layout.length - 1) {
-            const aisle = document.createElement('div'); aisle.className = 'aisle'; encabezadoRow.appendChild(aisle);
+            const pasillo = document.createElement('div'); pasillo.className = 'pasillo'; encabezadoRow.appendChild(pasillo);
         }
     });
     airplaneCabin.appendChild(encabezadoRow);
@@ -411,14 +412,14 @@ function renderAirplaneCabin() {
             for (let i = 0; i < blockCount; i++) {
                 const seatData = flight.seats.find(s => s.row === r && s.colIndex === c);
                 const seatEl = document.createElement('div');
-                seatEl.className = `seat seat--${seatData.type}`;
+                seatEl.className = `asiento asiento--${seatData.type}`;
                 seatEl.textContent = seatData.id;
 
                 if (seatData.occupiedBy) seatEl.classList.add('asiento--no-disponible');
 
                 const passengerWithSeat = currentReservationSession.passengers.find(p => p.seatId === seatData.id);
                 if (passengerWithSeat) {
-                    seatEl.className = 'seat asiento--seleccionado';
+                    seatEl.className = 'asiento asiento--seleccionado';
                     seatEl.textContent = passengerWithSeat.name.charAt(0);
                 }
 
@@ -427,7 +428,7 @@ function renderAirplaneCabin() {
                 c++;
             }
             if (layoutIndex < config.layout.length - 1) {
-                const aisle = document.createElement('div'); aisle.className = 'cabin-aisle'; aisle.textContent = r; rowDiv.appendChild(aisle);
+                const pasillo = document.createElement('div'); pasillo.className = 'pasillo-cabina'; pasillo.textContent = r; rowDiv.appendChild(pasillo);
             }
         });
         airplaneCabin.appendChild(rowDiv);
@@ -460,8 +461,8 @@ btnConfirmReservation.addEventListener('click', () => {
     const flight = flights.find(f => f.id === currentReservationSession.flightId);
     currentReservationSession.passengers.forEach(p => {
         const asiento = flight.seats.find(s => s.id === p.seatId);
-        if (seat) {
-            seat.occupiedBy = { name: p.name, age: p.age, disability: p.disability };
+        if (asiento) {
+            asiento.occupiedBy = { name: p.name, age: p.age, disability: p.disability };
         }
     });
 
@@ -474,6 +475,8 @@ btnConfirmReservation.addEventListener('click', () => {
     };
 
     globalReservations.push(newRes);
+    resetReserveForm();
+    renderAdminFlights(); // Actualizar el contador de la lista de vuelos
     alert("Reserva confirmada con éxito."); navigateTo('vista-mis-reservas');
 });
 
@@ -556,13 +559,14 @@ function renderPrintView() {
                 if (flight) {
                     res.passengers.forEach(p => {
                         const asiento = flight.seats.find(s => s.id === p.seatId);
-                        if (seat) seat.occupiedBy = null;
+                        if (asiento) asiento.occupiedBy = null;
                     });
                 }
 
                 // Eliminar reserva
                 globalReservations = globalReservations.filter(r => r.id !== res.id);
                 alert("Reserva revertida exitosamente.");
+                renderAdminFlights(); // Actualizar el contador de la lista de vuelos
                 renderPrintView(); // Refrescar lista
             }
         };
