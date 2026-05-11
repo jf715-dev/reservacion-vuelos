@@ -1,12 +1,14 @@
 /* --- Variables & Reset --- */
 :root {
-    --color-primary: #1E293B; /* Navy oscuro */
-    --color-secondary: #3B82F6; /* Azul */
+    --color-primary: #1E293B;
+    /* Navy oscuro */
+    --color-secondary: #3B82F6;
+    /* Azul */
     --color-background: #F8FAFC;
     --color-surface: #FFFFFF;
     --color-text: #0F172A;
     --color-texto-silenciado: #64748B;
-    
+
     /* Colores de asientos basados en referencia */
     --seat-excellence: #64748B;
     --seat-priority: #65a30d;
@@ -14,7 +16,7 @@
     --seat-front: #EAB308;
     --seat-back: #FACC15;
     --seat-unavailable: #E2E8F0;
-    --seat-emergency: #EF4444; 
+    --seat-emergency: #EF4444;
     --seat-selected: #3B82F6;
 
     --font-main: 'Inter', sans-serif;
@@ -31,24 +33,41 @@
     box-sizing: border-box;
 }
 
+html,
 body {
     font-family: var(--font-main);
     background-color: var(--color-background);
     color: var(--color-text);
-    overflow: oculto; 
-    height: 100vh;
+    overflow: hidden !important;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
+    overscroll-behavior: none;
+    /* Previene el efecto de rebote en Mac/Móvil */
 }
 
 .oculto {
     display: none !important;
 }
 
-.mt-2 { margin-top: 0.5rem; }
-.mt-4 { margin-top: 1rem; }
-.w-100 { width: 100%; }
-.texto-silenciado { color: var(--color-texto-silenciado); }
+.mt-2 {
+    margin-top: 0.5rem;
+}
+
+.mt-4 {
+    margin-top: 1rem;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.texto-silenciado {
+    color: var(--color-texto-silenciado);
+}
 
 /* --- Botones --- */
 .boton {
@@ -147,6 +166,7 @@ body {
     background-color: #e2e8f0;
     transform: scale(1.1);
 }
+
 .encabezado {
     height: 80px;
     display: flex;
@@ -210,10 +230,13 @@ body {
     z-index: 100;
     transform: translateX(-100%);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex; flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
-.menu-lateral--open { transform: translateX(0); }
+.menu-lateral--open {
+    transform: translateX(0);
+}
 
 .menu-lateral__cabecera {
     display: flex;
@@ -223,9 +246,14 @@ body {
     border-bottom: 1px solid #E2E8F0;
 }
 
-.menu-lateral__titulo { font-size: 1.25rem; }
+.menu-lateral__titulo {
+    font-size: 1.25rem;
+}
 
-.menu-lateral__lista { list-style: none; padding: 1rem 0; }
+.menu-lateral__lista {
+    list-style: none;
+    padding: 1rem 0;
+}
 
 .menu-lateral__enlace {
     display: block;
@@ -236,7 +264,9 @@ body {
     transition: background-color 0.2s;
 }
 
-.menu-lateral__enlace:hover { background-color: var(--color-background); }
+.menu-lateral__enlace:hover {
+    background-color: var(--color-background);
+}
 
 .menu-lateral__enlace--activo {
     background-color: #EFF6FF;
@@ -250,14 +280,17 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0, 0, 0, 0.4);
     z-index: 90;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s;
 }
 
-.capa-oscura--visible { opacity: 1; pointer-events: auto; }
+.capa-oscura--visible {
+    opacity: 1;
+    pointer-events: auto;
+}
 
 /* --- Layout Principal --- */
 .contenido-principal {
@@ -270,7 +303,7 @@ body {
 .vistas {
     flex: 1;
     position: relative;
-    overflow: oculto;
+    overflow: hidden;
 }
 
 .vista {
@@ -280,25 +313,39 @@ body {
     width: 100%;
     height: 100%;
     opacity: 0;
+    transform: translateX(15vw) scale(0.95);
+    /* Aterrizando desde la derecha */
     pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    /* Rebote suave */
     overflow-y: auto;
 }
 
 .vista--sin-scroll {
-    overflow-y: oculto;
+    overflow-y: hidden;
 }
 
 .vista--activa {
     opacity: 1;
+    transform: translateX(0) scale(1);
+    /* Posición central */
     pointer-events: auto;
     z-index: 10;
+}
+
+.vista--saliendo {
+    opacity: 0;
+    transform: translateX(-15vw) scale(0.95);
+    /* Despegando hacia la izquierda */
+    pointer-events: none;
+    z-index: 5;
 }
 
 .contenedor {
     max-width: 900px;
     margin: 0 auto;
-    padding: 3rem 2rem;
+    padding: 110px 2rem 3rem 2rem;
+    /* Espacio para el header de 80px + margen */
 }
 
 .contenedor--pequeno {
@@ -324,10 +371,7 @@ body {
 
 /* --- Vista Inicio (Hero) --- */
 #vista-inicio {
-    background-image: linear-gradient(rgba(240, 249, 255, 0.8), rgba(224, 242, 254, 0.8)), url("https://media.cnn.com/api/v1/images/stellar/prod/cnne-1721873-copia-de-foto-para-wp-2024-07-16t082810-699.jpg");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
+    /* El fondo y la imagen ahora se manejan en el HTML para el diseño de pantalla dividida */
 }
 
 .portada {
@@ -353,14 +397,15 @@ body {
     font-weight: 900;
     line-height: 1.1;
     color: var(--color-text);
-    margin-bottom: 4rem; /* Aumentado para compensar la imagen */
+    margin-bottom: 4rem;
+    /* Aumentado para compensar la imagen */
 }
 
 .search-widget {
     background-color: var(--color-surface);
     border-radius: var(--border-radius-lg);
     padding: 1.5rem 2rem;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
     z-index: 2;
     width: 95%;
     max-width: 1100px;
@@ -469,14 +514,42 @@ body {
     font-weight: 500;
 }
 
-.footer__link:hover { color: var(--color-secondary); }
+.footer__link:hover {
+    color: var(--color-secondary);
+}
 
 /* --- Forms & Lists (Admin/Reserve) --- */
-.formulario { background-color: var(--color-surface); padding: 2.5rem; border-radius: var(--border-radius); box-shadow: var(--shadow); }
-.formulario__grupo { margin-bottom: 1.5rem; display: flex; flex-direction: column; }
-.formulario__etiqueta { font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; }
-.formulario__campo { padding: 0.85rem 1rem; border: 1.5px solid #E2E8F0; border-radius: var(--border-radius-sm); font-size: 0.9rem; font-family: var(--font-main); }
-.formulario__campo:focus { outline: none; border-color: var(--color-secondary); }
+.formulario {
+    background-color: var(--color-surface);
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.formulario__grupo {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.formulario__etiqueta {
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.formulario__campo {
+    padding: 0.85rem 1rem;
+    border: 1.5px solid #E2E8F0;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.9rem;
+    font-family: var(--font-main);
+}
+
+.formulario__campo:focus {
+    outline: none;
+    border-color: var(--color-secondary);
+}
 
 .formulario__grupo--checkbox {
     flex-direction: row;
@@ -502,31 +575,31 @@ body {
 }
 
 /* --- Mapa de Asientos --- */
-.vista-dividida { 
-    display: flex; 
-    flex-direction: row; 
-    height: 100%; 
-    width: 100%; 
+.vista-dividida {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
 }
 
-.vista-dividida__panel--info { 
+.vista-dividida__panel--info {
     width: 420px;
     flex-shrink: 0;
-    background-color: var(--color-surface); 
-    border-right: 1px solid #E2E8F0; 
-    padding: 2.5rem; 
+    background-color: var(--color-surface);
+    border-right: 1px solid #E2E8F0;
+    padding: 2.5rem;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
     justify-content: space-between;
 }
 
-.vista-dividida__panel--mapa { 
-    flex: 1; 
-    background-color: #F1F5F9; 
-    display: flex; 
-    justify-content: center; 
-    padding: 4rem 2rem; 
+.vista-dividida__panel--mapa {
+    flex: 1;
+    background-color: #F1F5F9;
+    display: flex;
+    justify-content: center;
+    padding: 4rem 2rem;
     overflow-y: auto;
     overflow-x: auto;
 }
@@ -557,66 +630,283 @@ body {
     font-weight: 600;
 }
 
-.banner-estado { background-color: #EFF6FF; border: 1px solid #BFDBFE; color: #1E40AF; padding: 1.25rem; border-radius: var(--border-radius); display: flex; gap: 1rem; }
-.banner-estado__icono { background-color: #3B82F6; color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
-
-.cabina-avion {
-    background-color: white;
-    border-radius: 200px 200px 60px 60px;
-    padding: 120px 80px 80px 80px;
-    box-shadow: inset 0 0 0 10px #E2E8F0, 0 20px 50px rgba(0,0,0,0.1);
-    border: 5px solid white;
-    display: flex; flex-direction: column; gap: 12px; align-items: center;
-    position: relative;
-    min-width: 400px;
-    height: max-content;
+.banner-estado {
+    background-color: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    color: #1E40AF;
+    padding: 1.25rem;
+    border-radius: var(--border-radius);
+    display: flex;
+    gap: 1rem;
 }
 
-/* Alas del avión para darle forma */
-.cabina-avion::before,
-.cabina-avion::after {
+.banner-estado__icono {
+    background-color: #3B82F6;
+    color: white;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+}
+
+.cabina-envoltura {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    min-width: 400px;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.cabina-envoltura::before,
+.cabina-envoltura::after {
     content: '';
     position: absolute;
     top: 40%;
     width: 60px;
     height: 150px;
-    background-color: #E2E8F0;
-    z-index: -1;
+    background-color: #CBD5E1;
+    z-index: 0;
 }
 
-.cabina-avion::before {
+.cabina-envoltura::before {
     left: -50px;
     border-radius: 100px 0 0 100px;
     transform: skewY(-20deg);
 }
 
-.cabina-avion::after {
+.cabina-envoltura::after {
     right: -50px;
     border-radius: 0 100px 100px 0;
     transform: skewY(20deg);
 }
 
-.fila-cabina { display: flex; gap: 12px; align-items: center; }
-.asiento {
-    width: 36px; height: 36px; border-radius: 8px; cursor: pointer; transition: all 0.2s;
-    display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: transparent;
+.cabina-flecha-arriba {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    cursor: pointer;
+    z-index: 2;
+    margin-bottom: -5px;
 }
-.asiento:hover:not(.asiento--no-disponible) { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
-.asiento--excellence { background-color: var(--seat-excellence); }
-.asiento--priority { background-color: var(--seat-priority); }
-.asiento--xl { background-color: var(--seat-xl); }
-.asiento--delantero { background-color: var(--seat-front); }
-.asiento--trasero { background-color: var(--seat-back); }
+.cabina-flecha-arriba svg {
+    filter: drop-shadow(0 -10px 10px rgba(0, 0, 0, 0.05));
+    transition: transform 0.2s;
+}
 
-.asiento--seleccionado { background-color: var(--color-secondary); color: white; }
-.asiento--no-disponible { background-color: var(--seat-unavailable); cursor: not-allowed; }
-.asiento--emergencia { border: 2.5px solid var(--seat-emergency); color: var(--seat-emergency); background-color: transparent; }
+.cabina-flecha-arriba:hover svg {
+    transform: translateY(-5px);
+}
 
-.etiquetas-cabina { display: flex; gap: 12px; margin-bottom: 25px; font-weight: 800; color: var(--color-texto-silenciado); font-size: 0.9rem; }
-.etiquetas-cabina .label { width: 36px; text-align: center; }
-.pasillo { width: 30px; }
-.pasillo-cabina { width: 30px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; color: #94A3B8; }
+.cabina-scroll-area {
+    width: max-content;
+    min-width: 100%;
+    height: 450px;
+    background-color: #E2E8F0;
+    overflow: hidden;
+    border-left: 5px solid #E2E8F0;
+    border-right: 5px solid #E2E8F0;
+    box-shadow: inset 10px 0 0 0 #CBD5E1, inset -10px 0 0 0 #CBD5E1;
+    position: relative;
+    z-index: 1;
+}
+
+.cabina-asientos-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    padding: 20px 30px 40px 30px;
+    min-height: max-content;
+}
+
+.cabina-flecha-abajo {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    cursor: pointer;
+    z-index: 2;
+    margin-top: -5px;
+}
+
+.cabina-flecha-abajo svg {
+    filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.05));
+    transition: transform 0.2s;
+}
+
+.cabina-flecha-abajo:hover svg {
+    transform: translateY(5px);
+}
+
+.fila-cabina {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+/* Nuevo estilo de asientos inspirado en la imagen */
+.asiento {
+    width: 34px;
+    height: 40px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: transparent;
+    /* Mantenemos oculto el texto por defecto para que se vea más limpio */
+    position: relative;
+    border: 2.5px solid #2B354D;
+    /* Borde azul marino oscuro (Free seat) */
+    background-color: #FFFFFF;
+    box-sizing: border-box;
+}
+
+/* Reposacabezas (Headrest) */
+.asiento::before {
+    content: '';
+    position: absolute;
+    top: 2.5px;
+    left: 4.5px;
+    right: 4.5px;
+    height: 7px;
+    border-radius: 3px;
+    background-color: #2B354D;
+    transition: all 0.2s;
+}
+
+/* Reposabrazos (Armrests) */
+.asiento::after {
+    content: '';
+    position: absolute;
+    top: 14px;
+    bottom: 5px;
+    left: 2px;
+    width: 3.5px;
+    border-radius: 2px;
+    background-color: #CBD5E1;
+    box-shadow: 21px 0 0 0 #CBD5E1;
+    /* Proyecta el reposabrazos derecho */
+    transition: all 0.2s;
+}
+
+.asiento:hover:not(.asiento--no-disponible) {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    border-color: #3B82F6;
+}
+
+.asiento:hover:not(.asiento--no-disponible)::before {
+    background-color: #3B82F6;
+}
+
+/* Colores de las diferentes clases (se aplican al reposacabezas en vez de todo el asiento) */
+.asiento--excellence::before {
+    background-color: #F16975;
+}
+
+/* Rosa/Rojizo como en la imagen */
+.asiento--priority::before {
+    background-color: #59B5B2;
+}
+
+/* Verde azulado/Teal */
+.asiento--xl::before {
+    background-color: #38BDF8;
+}
+
+/* Azul claro */
+.asiento--delantero::before {
+    background-color: #2B354D;
+}
+
+/* Azul oscuro por defecto */
+.asiento--trasero::before {
+    background-color: #64748B;
+}
+
+/* Gris intermedio */
+
+/* Asiento Seleccionado */
+.asiento--seleccionado {
+    background-color: #5ED182;
+    border-color: #5ED182;
+    color: white;
+}
+
+.asiento--seleccionado::before {
+    background-color: #3CA85D;
+}
+
+.asiento--seleccionado::after {
+    background-color: #86EFAC;
+    box-shadow: 21px 0 0 0 #86EFAC;
+}
+
+/* Asiento Ocupado/No disponible (Sold) */
+.asiento--no-disponible {
+    background-color: #2B354D;
+    border-color: #2B354D;
+    cursor: not-allowed;
+}
+
+.asiento--no-disponible::before {
+    background-color: #1E293B;
+}
+
+.asiento--no-disponible::after {
+    background-color: #475569;
+    box-shadow: 21px 0 0 0 #475569;
+}
+
+/* Asiento de Salida de Emergencia (Exit) */
+.asiento--emergencia {
+    border-color: #EF4444;
+}
+
+.asiento--emergencia::before {
+    background-color: #EF4444;
+}
+
+.etiquetas-cabina {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 25px;
+    font-weight: 800;
+    color: var(--color-texto-silenciado);
+    font-size: 0.9rem;
+}
+
+.etiquetas-cabina .label {
+    width: 36px;
+    text-align: center;
+}
+
+.pasillo {
+    width: 30px;
+}
+
+.pasillo-cabina {
+    width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #94A3B8;
+}
 
 /* Leyenda de Asientos */
 .leyenda {
@@ -629,15 +919,41 @@ body {
     border: 1px solid #E2E8F0;
 }
 
-.leyenda__columna { display: flex; flex-direction: column; gap: 0.75rem; }
-.leyenda__elemento { display: flex; align-items: center; gap: 0.75rem; font-size: 0.8rem; font-weight: 600; color: var(--color-text); }
+.leyenda__columna {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.leyenda__elemento {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
 .asiento--leyenda {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 28px;
     border-radius: 4px;
     cursor: default;
     box-shadow: none !important;
     transform: none !important;
+    border-width: 2px;
+}
+
+.asiento--leyenda::before {
+    height: 5px;
+    top: 2px;
+    left: 3px;
+    right: 3px;
+}
+
+.asiento--leyenda::after {
+    display: none;
+    /* Ocultar reposabrazos en la leyenda para simplificar */
 }
 
 /* --- Caja de Autenticación --- */
@@ -647,7 +963,8 @@ body {
     box-shadow: var(--shadow-lg);
     margin-top: 2rem;
     position: relative;
-    overflow: visible; /* Para que el botón de cerrar no se corte */
+    overflow: visible;
+    /* Para que el botón de cerrar no se corte */
 }
 
 .caja-autenticacion .formulario {
@@ -687,13 +1004,19 @@ body {
     display: none;
     text-align: left;
 }
+
 .mensaje-error:not(:empty) {
     display: block;
 }
 
 /* Utilities */
-.mb-3 { margin-bottom: 1rem; }
-.mt-3 { margin-top: 1rem; }
+.mb-3 {
+    margin-bottom: 1rem;
+}
+
+.mt-3 {
+    margin-top: 1rem;
+}
 
 .caja-autenticacion__cerrar:hover {
     background-color: var(--color-secondary);
@@ -763,4 +1086,14 @@ body {
 .estado-vacio__texto {
     font-size: 1.25rem;
     font-weight: 600;
+}
+
+/* Scroll oculto pero funcional */
+.scroll-oculto::-webkit-scrollbar {
+    display: none;
+}
+
+.scroll-oculto {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
