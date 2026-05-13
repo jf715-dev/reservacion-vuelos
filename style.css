@@ -369,10 +369,7 @@ body {
     margin-bottom: 1.5rem;
 }
 
-/* --- Vista Inicio (Hero) --- */
-#vista-inicio {
-    /* El fondo y la imagen ahora se manejan en el HTML para el diseño de pantalla dividida */
-}
+
 
 .portada {
     display: flex;
@@ -572,6 +569,13 @@ body {
     justify-content: space-between;
     align-items: center;
     border: 1px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.border-active {
+    border-color: var(--color-secondary) !important;
+    background-color: #EFF6FF !important;
+    transform: translateX(5px);
 }
 
 /* --- Mapa de Asientos --- */
@@ -710,12 +714,22 @@ body {
     min-width: 100%;
     height: 450px;
     background-color: #E2E8F0;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE y Edge */
     border-left: 5px solid #E2E8F0;
     border-right: 5px solid #E2E8F0;
     box-shadow: inset 10px 0 0 0 #CBD5E1, inset -10px 0 0 0 #CBD5E1;
     position: relative;
     z-index: 1;
+}
+
+.cabina-scroll-area::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, Edge */
 }
 
 .cabina-asientos-grid {
@@ -765,8 +779,8 @@ body {
     justify-content: center;
     font-size: 0.65rem;
     font-weight: 800;
-    color: transparent;
-    /* Mantenemos oculto el texto por defecto para que se vea más limpio */
+    color: #3B82F6; /* Identificadores visibles en azul */
+    /* El texto ya no es transparente para que los IDs sean siempre visibles */
     position: relative;
     border: 2.5px solid #2B354D;
     /* Borde azul marino oscuro (Free seat) */
@@ -860,6 +874,7 @@ body {
     background-color: #2B354D;
     border-color: #2B354D;
     cursor: not-allowed;
+    color: #FFFFFF; /* IDs visibles en blanco sobre fondo oscuro */
 }
 
 .asiento--no-disponible::before {
@@ -1096,4 +1111,118 @@ body {
 .scroll-oculto {
     -ms-overflow-style: none;
     scrollbar-width: none;
+}
+
+/* --- Elementos Simulados del Avión --- */
+.puerta-avion {
+    width: 80%;
+    max-width: 200px;
+    height: 12px;
+    background-color: #94A3B8;
+    border-radius: 6px;
+    margin: 15px auto;
+    position: relative;
+    border: 2px solid #64748B;
+}
+
+.puerta-avion::after {
+    content: 'PUERTA';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.55rem;
+    font-weight: 800;
+    color: #FFF;
+    background: #64748B;
+    padding: 0 6px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+}
+
+.ventana-simulada {
+    width: 8px;
+    height: 24px;
+    background-color: #E0F2FE;
+    border: 2px solid #7DD3FC;
+    border-radius: 12px;
+    margin: 0 8px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.asiento--accesible {
+    border-color: #A855F7 !important;
+}
+
+.asiento--accesible::before {
+    background-color: #A855F7 !important;
+}
+
+.icono-discapacidad {
+    font-size: 0.75rem;
+    color: #A855F7;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -40%);
+    pointer-events: none;
+}
+
+.asiento--seleccionado .icono-discapacidad,
+.asiento--no-disponible .icono-discapacidad {
+    display: none;
+}
+
+
+/* --- Modal Alerta --- */
+.modal-alerta {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(30, 41, 59, 0.6);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.modal-alerta__contenido {
+    background-color: var(--color-surface);
+    padding: 2.5rem;
+    border-radius: var(--border-radius-lg);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    animation: modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-alerta__titulo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--color-text);
+    margin-bottom: 1rem;
+}
+
+.modal-alerta__mensaje {
+    font-size: 1rem;
+    color: var(--color-texto-silenciado);
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
 }
