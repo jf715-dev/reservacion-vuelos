@@ -1,8 +1,6 @@
 // --- Gestión de Estado (Memoria Volátil en RAM) ---
 let flights = [];
 let globalReservations = [];
-let users = []; // { name, email, pass }
-let currentUser = null;
 
 let currentReservationSession = {
     flightId: null,
@@ -11,69 +9,19 @@ let currentReservationSession = {
 };
 
 let editingReservationId = null;
+let editingPassengerId = null; // ID del pasajero en edición
 
 // --- Datos de Destinos ---
 const locationsData = {
-    "Alemania": ["Baviera", "Berlín", "Hesse", "Sajonia", "Renania del Norte-Westfalia", "Baden-Wurtemberg", "Baja Sajonia", "Brandeburgo", "Turingia", "Hamburgo"],
-    "Arabia Saudita": ["Riad", "La Meca", "Medina", "Provincia Oriental", "Asir", "Casim", "Hail", "Tabuk", "Frontera del Norte", "Yizán"],
-    "Argelia": ["Argel", "Orán", "Constantina", "Annaba", "Batna", "Blida", "Setif", "Sidi Bel Abbes", "Biskra", "Tlemcen"],
-    "Argentina": ["Buenos Aires", "Córdoba", "Santa Fe", "Mendoza", "Tucumán", "Entre Ríos", "Salta", "Misiones", "Chaco", "Corrientes"],
-    "Australia": ["Nueva Gales del Sur", "Victoria", "Queensland", "Australia Occidental", "Tasmania", "Australia Meridional", "Territorio del Norte", "Territorio de la Capital Australiana", "Territorio de la Bahía de Jervis", "Islas del Mar del Coral"],
-    "Bolivia": ["La Paz", "Santa Cruz", "Cochabamba", "Potosí", "Tarija", "Oruro", "Chuquisaca", "Beni", "Pando", "El Alto"],
-    "Brasil": ["São Paulo", "Río de Janeiro", "Minas Gerais", "Bahía", "Paraná", "Rio Grande do Sul", "Pernambuco", "Ceará", "Pará", "Santa Catarina"],
-    "Canadá": ["Ontario", "Quebec", "Columbia Británica", "Alberta", "Manitoba", "Saskatchewan", "Nueva Escocia", "Nuevo Brunswick", "Terranova y Labrador", "Isla del Príncipe Eduardo"],
-    "Chile": ["Región Metropolitana", "Valparaíso", "Biobío", "Antofagasta", "Araucanía", "Maule", "Coquimbo", "O'Higgins", "Los Lagos", "Tarapacá"],
-    "China": ["Pekín", "Shanghái", "Guangdong", "Sichuan", "Zhejiang", "Jiangsu", "Shandong", "Henan", "Hebei", "Hunan"],
-    "Colombia": ["Bogotá", "Antioquia", "Valle del Cauca", "Atlántico", "Cundinamarca", "Bolívar", "Santander", "Boyacá", "Tolima", "Norte de Santander"],
-    "Corea del Sur": ["Seúl", "Busan", "Incheon", "Daegu", "Daejeon", "Gwangju", "Ulsan", "Gyeonggi", "Gangwon", "Chungcheong del Sur"],
-    "Costa Rica": ["San José", "Alajuela", "Cartago", "Heredia", "Guanacaste", "Puntarenas", "Limón", "San Pedro", "Escazú", "Desamparados"],
-    "Cuba": ["La Habana", "Santiago de Cuba", "Camagüey", "Holguín", "Matanzas", "Villa Clara", "Guantánamo", "Pinar del Río", "Cienfuegos", "Las Tunas"],
-    "Ecuador": ["Pichincha", "Guayas", "Azuay", "Manabí", "Tungurahua", "Los Ríos", "El Oro", "Loja", "Imbabura", "Chimborazo"],
-    "Egipto": ["El Cairo", "Alejandría", "Guiza", "Sinaí del Sur", "Luxor", "Asuán", "Mar Rojo", "Dacalia", "Suhag", "Puerto Said"],
-    "Emiratos Árabes Unidos": ["Dubái", "Abu Dabi", "Sharjah", "Ajman", "Ras al-Khaimah", "Fuyaira", "Umm al-Qaywayn", "Al Ain", "Al Gharbia", "Khor Fakkan"],
     "España": ["Madrid", "Cataluña", "Andalucía", "Comunidad Valenciana", "Galicia", "País Vasco", "Canarias", "Castilla y León", "Castilla-La Mancha", "Murcia"],
-    "Estados Unidos": ["California", "Texas", "Nueva York", "Florida", "Illinois", "Pensilvania", "Ohio", "Georgia", "Carolina del Norte", "Michigan"],
-    "Etiopía": ["Adís Abeba", "Oromía", "Amhara", "Tigray", "Afar", "Somali", "Benishangul-Gumuz", "Gambela", "Harari", "Sidama"],
-    "Fiyi": ["Central", "Occidental", "Norte", "Oriental", "Rotuma", "Ba", "Bua", "Cakaudrove", "Kadavu", "Macuata"],
     "Francia": ["Isla de Francia", "Provenza-Alpes-Costa Azul", "Nueva Aquitania", "Occitania", "Bretaña", "Auvernia-Ródano-Alpes", "Gran Este", "Altos de Francia", "Países del Loira", "Normandía"],
-    "Ghana": ["Gran Acra", "Ashanti", "Región Occidental", "Región Central", "Región Norte", "Región Oriental", "Volta", "Brong-Ahafo", "Alta Occidental", "Alta Oriental"],
-    "Grecia": ["Ática", "Macedonia Central", "Creta", "Tesalia", "Egeo Meridional", "Peloponeso", "Grecia Occidental", "Macedonia Oriental y Tracia", "Epiro", "Islas Jónicas"],
-    "Guatemala": ["Guatemala", "Quetzaltenango", "Escuintla", "Sacatepéquez", "Alta Verapaz", "Huehuetenango", "San Marcos", "Petén", "Jutiapa", "Quiché"],
-    "Honduras": ["Francisco Morazán", "Cortés", "Atlántida", "Comayagua", "Yoro", "Choluteca", "Olancho", "El Paraíso", "Copán", "Valle"],
-    "India": ["Maharashtra", "Delhi", "Karnataka", "Tamil Nadu", "Gujarat", "Uttar Pradesh", "Bengala Occidental", "Rajastán", "Madhya Pradesh", "Bihar"],
-    "Indonesia": ["Yakarta", "Bali", "Java Occidental", "Java Oriental", "Sumatra del Norte", "Java Central", "Banten", "Célebes Meridional", "Lampung", "Riau"],
-    "Islas Salomón": ["Guadalcanal", "Malaita", "Provincia Occidental", "Makira-Ulawa", "Isabel", "Choiseul", "Temotu", "Central", "Rennell y Bellona", "Honiara"],
-    "Italia": ["Lombardía", "Lacio", "Campania", "Véneto", "Sicilia", "Piamonte", "Apulia", "Emilia-Romaña", "Toscana", "Calabria"],
-    "Jamaica": ["Kingston", "Saint Andrew", "Saint James", "Saint Ann", "Manchester", "Clarendon", "Saint Catherine", "Westmoreland", "Saint Elizabeth", "Hanover"],
+    "Argentina": ["Buenos Aires", "Córdoba", "Santa Fe", "Mendoza", "Tucumán", "Entre Ríos", "Salta", "Misiones", "Chaco", "Corrientes"],
+    "Chile": ["Región Metropolitana", "Valparaíso", "Biobío", "Antofagasta", "Araucanía", "Maule", "Coquimbo", "O'Higgins", "Los Lagos", "Tarapacá"],
     "Japón": ["Tokio", "Osaka", "Kioto", "Hokkaido", "Fukuoka", "Kanagawa", "Aichi", "Saitama", "Chiba", "Hyogo"],
-    "Kenia": ["Nairobi", "Mombasa", "Kisumu", "Nakuru", "Uasin Gishu", "Kiambu", "Machakos", "Meru", "Kakamega", "Nyeri"],
-    "Marruecos": ["Casablanca-Settat", "Marrakech-Safí", "Rabat-Salé-Kenitra", "Tánger-Tetuán-Alhucemas", "Fez-Mequinez", "Sus-Masa", "Oriental", "Beni Melal-Jenifra", "Draa-Tafilalet", "Guelmim-Río Noun"],
-    "Micronesia": ["Chuuk", "Pohnpei", "Yap", "Kosrae", "Weno", "Tofol", "Colonia", "Lelu", "Tol", "Fefan"],
-    "México": ["Ciudad de México", "Jalisco", "Nuevo León", "Estado de México", "Yucatán", "Puebla", "Guanajuato", "Veracruz", "Chihuahua", "Baja California"],
-    "Nigeria": ["Lagos", "Kano", "Kaduna", "Rivers", "Abuya", "Oyo", "Katsina", "Ogun", "Delta", "Enugu"],
-    "Nueva Zelanda": ["Auckland", "Wellington", "Canterbury", "Waikato", "Otago", "Manawatu-Wanganui", "Bay of Plenty", "Hawke's Bay", "Taranaki", "Northland"],
-    "Países Bajos": ["Holanda Septentrional", "Holanda Meridional", "Utrecht", "Brabante Septentrional", "Güeldres", "Overijssel", "Limburgo", "Flevolanda", "Groninga", "Drente"],
-    "Palaos": ["Koror", "Airai", "Peleliu", "Melekeok", "Angaur", "Ngardmau", "Ngaremlengui", "Ngarchelong", "Ngatpang", "Aimeliik"],
-    "Panamá": ["Panamá", "Colón", "Chiriquí", "Panamá Oeste", "Veraguas", "Coclé", "Herrera", "Los Santos", "Bocas del Toro", "Darién"],
-    "Papúa Nueva Guinea": ["Distrito Capital Nacional", "Morobe", "Tierras Altas Occidentales", "Madang", "Nueva Bretaña Oriental", "Tierras Altas Orientales", "Bougainville", "Nueva Irlanda", "Sepik Oriental", "Enga"],
-    "Paraguay": ["Asunción", "Central", "Alto Paraná", "Itapúa", "Caaguazú", "San Pedro", "Cordillera", "Guairá", "Concepción", "Amambay"],
-    "Perú": ["Lima", "Cusco", "Arequipa", "La Libertad", "Piura", "Cajamarca", "Junín", "Lambayeque", "Puno", "Ancash"],
-    "Portugal": ["Lisboa", "Oporto", "Faro", "Braga", "Setúbal", "Aveiro", "Coímbra", "Leiría", "Santarém", "Madeira"],
+    "Corea del Sur": ["Seúl", "Busan", "Incheon", "Daegu", "Daejeon", "Gwangju", "Ulsan", "Gyeonggi", "Gangwon", "Chungcheong del Sur"],
+    "Estados Unidos": ["California", "Texas", "Nueva York", "Florida", "Illinois", "Pensilvania", "Ohio", "Georgia", "Carolina del Norte", "Michigan"],
     "Reino Unido": ["Inglaterra", "Escocia", "Gales", "Irlanda del Norte", "Gran Londres", "Midlands Occidentales", "Gran Mánchester", "West Yorkshire", "Hampshire", "Kent"],
-    "República Dominicana": ["Distrito Nacional", "Santiago", "Santo Domingo", "Puerto Plata", "La Altagracia", "San Cristóbal", "La Vega", "San Pedro de Macorís", "Duarte", "Espaillat"],
-    "Rusia": ["Moscú", "San Petersburgo", "Tatarstán", "Siberia", "Urales", "Bashkortostán", "Cheliábinsk", "Nizhni Nóvgorod", "Samara", "Rostov"],
-    "Samoa": ["Tuamasaga", "A'ana", "Atua", "Fa'asaleleaga", "Gaga'emauga", "Vaisigano", "Gagaifomauga", "Palauli", "Satupa'itea", "Aiga-i-le-Tai"],
-    "Senegal": ["Dakar", "Thiès", "Diourbel", "Saint-Louis", "Ziguinchor", "Kaolack", "Louga", "Tambacounda", "Fatick", "Kolda"],
-    "Sudáfrica": ["Gauteng", "Cabo Occidental", "KwaZulu-Natal", "Cabo Oriental", "Mpumalanga", "Limpopo", "Noroeste", "Estado Libre", "Cabo del Norte", "Pretoria"],
-    "Suiza": ["Zúrich", "Ginebra", "Vaud", "Berna", "Basilea-Ciudad", "Argovia", "San Galo", "Lucerna", "Tesino", "Friburgo"],
-    "Tailandia": ["Bangkok", "Chiang Mai", "Phuket", "Chonburi", "Surat Thani", "Nakhon Ratchasima", "Khon Kaen", "Udon Thani", "Songkhla", "Nakhon Si Thammarat"],
-    "Tanzania": ["Dar es Salaam", "Zanzíbar", "Arusha", "Dodoma", "Mwanza", "Morogoro", "Tanga", "Mbeya", "Kigoma", "Tabora"],
-    "Tonga": ["Tongatapu", "Vava'u", "Ha'apai", "Eua", "Niuas", "Nukuʻalofa", "Neiafu", "Pangai", "Ohonua", "Hihifo"],
-    "Turquía": ["Estambul", "Ankara", "Esmirna", "Antalya", "Bursa", "Adana", "Konya", "Gaziantep", "Mersin", "Kayseri"],
-    "Uruguay": ["Montevideo", "Canelones", "Maldonado", "Salto", "Colonia", "Paysandú", "San José", "Rivera", "Tacuarembó", "Rocha"],
-    "Vanuatu": ["Shefa", "Sanma", "Tafea", "Malampa", "Penama", "Torba", "Port Vila", "Luganville", "Isangel", "Lakatoro"],
-    "Venezuela": ["Distrito Capital", "Zulia", "Miranda", "Carabobo", "Lara", "Aragua", "Anzoátegui", "Bolívar", "Táchira", "Sucre"],
-    "Vietnam": ["Ciudad Ho Chi Minh", "Hanói", "Da Nang", "Hai Phong", "Can Tho", "Dong Nai", "Binh Duong", "Nghe An", "Thanh Hoa", "Hai Duong"]
+    "Perú": ["Lima", "Cusco", "Arequipa", "La Libertad", "Piura", "Cajamarca", "Junín", "Lambayeque", "Puno", "Ancash"]
 };
 
 // --- Configuración de Aeronaves ---
@@ -91,78 +39,8 @@ const SEAT_LETTERS = "ABCDEFGHIJ";
 const navLinks = document.querySelectorAll('.encabezado__enlace');
 const vistas = document.querySelectorAll('.vista');
 
-// Auth Elements
-const authStatus = document.getElementById('estado-autenticacion');
-const btnLoginView = document.getElementById('btn-vista-ingreso');
-const btnRegisterView = document.getElementById('btn-vista-registro');
-const tabLogin = document.getElementById('pestana-ingreso');
-const tabRegister = document.getElementById('pestana-registro');
-const formLogin = document.getElementById('formulario-ingreso');
-const formRegister = document.getElementById('formulario-registro');
-
-// Admin Elements
-const formAdmin = document.getElementById('formulario-admin');
-const adminFlightList = document.getElementById('lista-vuelos-admin');
+// Reserve Elements
 const reserveFlightSelect = document.getElementById('selector-vuelo-reserva');
-const selectPais = document.getElementById('pais-vuelo');
-const selectEstado = document.getElementById('estado-vuelo');
-const selectPaisOrigen = document.getElementById('pais-origen');
-const selectEstadoOrigen = document.getElementById('estado-origen');
-
-// Llenar selector de países (Origen y Destino)
-if (selectPais || selectPaisOrigen) {
-    Object.keys(locationsData).forEach(pais => {
-        if (selectPais) {
-            const optionDest = document.createElement('option');
-            optionDest.value = pais;
-            optionDest.textContent = pais;
-            selectPais.appendChild(optionDest);
-        }
-
-        if (selectPaisOrigen) {
-            const optionOrig = document.createElement('option');
-            optionOrig.value = pais;
-            optionOrig.textContent = pais;
-            selectPaisOrigen.appendChild(optionOrig);
-        }
-    });
-
-    if (selectPais) {
-        selectPais.addEventListener('change', (e) => {
-            selectEstado.innerHTML = '<option value="" disabled selected>Seleccione un estado</option>';
-            const estados = locationsData[e.target.value];
-            if (estados) {
-                estados.forEach(est => {
-                    const option = document.createElement('option');
-                    option.value = est;
-                    option.textContent = est;
-                    selectEstado.appendChild(option);
-                });
-                selectEstado.disabled = false;
-            } else {
-                selectEstado.disabled = true;
-            }
-        });
-    }
-
-    if (selectPaisOrigen) {
-        selectPaisOrigen.addEventListener('change', (e) => {
-            selectEstadoOrigen.innerHTML = '<option value="" disabled selected>Seleccione un estado</option>';
-            const estados = locationsData[e.target.value];
-            if (estados) {
-                estados.forEach(est => {
-                    const option = document.createElement('option');
-                    option.value = est;
-                    option.textContent = est;
-                    selectEstadoOrigen.appendChild(option);
-                });
-                selectEstadoOrigen.disabled = false;
-            } else {
-                selectEstadoOrigen.disabled = true;
-            }
-        });
-    }
-}
 
 // Reserve Elements
 const passengerSection = document.getElementById('seccion-pasajeros');
@@ -181,6 +59,56 @@ const seatStatusBanner = document.getElementById('banner-estado-asientos');
 // Print Elements
 const printArea = document.getElementById('area-impresion');
 
+// --- Alerta Personalizada ---
+function showAlert(message) {
+    const modal = document.getElementById('modal-alerta');
+    const msgEl = document.getElementById('modal-alerta-mensaje');
+    const btnAceptar = document.getElementById('btn-modal-aceptar');
+    const btnCancelar = document.getElementById('btn-modal-cancelar');
+
+    if (!modal) {
+        window['alert'](message);
+        return;
+    }
+
+    msgEl.textContent = message;
+    modal.classList.remove('oculto');
+    if (btnCancelar) btnCancelar.classList.add('oculto');
+
+    btnAceptar.onclick = () => {
+        modal.classList.add('oculto');
+    };
+}
+
+function showConfirm(message, onConfirm) {
+    const modal = document.getElementById('modal-alerta');
+    const msgEl = document.getElementById('modal-alerta-mensaje');
+    const btnAceptar = document.getElementById('btn-modal-aceptar');
+    const btnCancelar = document.getElementById('btn-modal-cancelar');
+
+    if (!modal) {
+        if (window.confirm(message)) onConfirm();
+        return;
+    }
+
+    msgEl.textContent = message;
+    modal.classList.remove('oculto');
+    if (btnCancelar) btnCancelar.classList.remove('oculto');
+
+    btnAceptar.onclick = () => {
+        modal.classList.add('oculto');
+        if (btnCancelar) btnCancelar.classList.add('oculto');
+        onConfirm();
+    };
+
+    if (btnCancelar) {
+        btnCancelar.onclick = () => {
+            modal.classList.add('oculto');
+            btnCancelar.classList.add('oculto');
+        };
+    }
+}
+
 // --- Animación de Escritura (Typewriter) ---
 let typewriterSession = 0; // Para cancelar animaciones previas si se cambia de vista rápido
 
@@ -190,8 +118,8 @@ function startTypewriter() {
     if (!subtitle || !title) return;
 
     const currentSession = ++typewriterSession;
-    
-    const text1 = "Listos para el Despegue";
+
+    const text1 = "¿Listos para el Despegue?";
     const text2 = "SERVICIO DE RESERVACION<br>DE VUELOS EN LINEA";
 
     subtitle.innerHTML = "";
@@ -208,7 +136,7 @@ function startTypewriter() {
             if (i < htmlString.length) {
                 let char = htmlString.charAt(i);
                 if (char === '<') isTag = true;
-                
+
                 text += char;
                 if (!isTag) {
                     element.innerHTML = text;
@@ -240,23 +168,47 @@ function startTypewriter() {
 }
 
 // Iniciar animación en la carga inicial
-document.addEventListener('DOMContentLoaded', startTypewriter);
+document.addEventListener('DOMContentLoaded', () => {
+    startTypewriter();
+    initDefaultFlights();
+    setupInputRestrictions();
+});
+
+// --- Restricción de Caracteres Especiales ---
+function setupInputRestrictions() {
+    document.addEventListener('input', (e) => {
+        if (e.target.tagName === 'INPUT' && (e.target.type === 'text')) {
+            // Lista de signos prohibidos (incluyendo los solicitados por el usuario)
+            let forbiddenPattern = /[,.:;!"#$%&/()=?¡¿¨*+´{}°§[\]]/g;
+
+            // Si es nombre o apellido, también prohibir números, guiones y guiones bajos
+            if (e.target.id === 'nombre-pasajero' || e.target.id === 'apellido-pasajero') {
+                forbiddenPattern = /[,.:;!"#$%&/()=?¡¿¨*+´°{}[\]0-9_-]/g;
+            }
+
+            if (forbiddenPattern.test(e.target.value)) {
+                const start = e.target.selectionStart;
+                const end = e.target.selectionEnd;
+                e.target.value = e.target.value.replace(forbiddenPattern, '');
+                // Restaurar posición del cursor
+                const newPos = Math.max(0, start - 1);
+                e.target.setSelectionRange(newPos, newPos);
+            }
+        }
+    });
+}
 
 // --- Navegación SPA ---
 
 function navigateTo(targetId) {
-    // Protección de rutas: Reservar y Mis Reservas requieren login
-    if ((targetId === 'vista-reservar' || targetId === 'vista-mis-reservas' || targetId === 'vista-admin' || targetId === 'vista-perfil') && !currentUser) {
-        alert("Debes iniciar sesión o registrarte para acceder a esta sección.");
-        navigateTo('vista-autenticacion');
-        return;
-    }
-
-    if (targetId === 'vista-inicio') {
-        startTypewriter();
-    } else {
-        typewriterSession++; // Cancela cualquier animación en curso si sale del inicio
-    }
+    // Actualizar clase activa en los enlaces de navegación
+    navLinks.forEach(link => {
+        if (link.dataset.target === targetId) {
+            link.classList.add('encabezado__enlace--activo');
+        } else {
+            link.classList.remove('encabezado__enlace--activo');
+        }
+    });
 
     if (editingReservationId && targetId !== 'vista-mapa-asientos') {
         const res = globalReservations.find(r => r.id === editingReservationId);
@@ -295,20 +247,6 @@ function navigateTo(targetId) {
         }
     });
 
-    const logo = document.querySelector('.encabezado__logo');
-    if (logo) {
-        logo.style.color = (targetId === 'vista-autenticacion') ? '#FFFFFF' : '#0F172A';
-    }
-
-    navLinks.forEach(link => {
-        if (link.dataset.target === targetId) {
-            link.classList.add('encabezado__enlace--activo');
-            link.style.color = '#3B82F6'; // Highlight active link
-        } else {
-            link.classList.remove('encabezado__enlace--activo');
-            link.style.color = (targetId === 'vista-autenticacion') ? '#F8FAFC' : '#64748B'; // Light color on dark auth background
-        }
-    });
 
     if (targetId === 'vista-mis-reservas') renderPrintView();
     if (targetId === 'vista-reservar') resetReserveForm();
@@ -317,237 +255,64 @@ function navigateTo(targetId) {
 navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
-        navigateTo(e.target.dataset.target);
+        navigateTo(e.currentTarget.dataset.target);
     });
 });
-
-// --- Lógica de Autenticación ---
-const btnCloseAuth = document.getElementById('btn-cerrar-autenticacion');
-if (btnCloseAuth) btnCloseAuth.onclick = () => navigateTo('vista-inicio');
-
-const btnCloseProfile = document.getElementById('btn-cerrar-perfil');
-if (btnCloseProfile) btnCloseProfile.onclick = () => navigateTo('vista-inicio');
 
 // Vincular botón de búsqueda de la home
 const btnSearchHome = document.querySelector('.boton--busqueda');
 if (btnSearchHome) btnSearchHome.onclick = () => navigateTo('vista-reservar');
 
-function setupAuthEvents() {
-    const btnLogin = document.getElementById('btn-vista-ingreso');
-    const btnReg = document.getElementById('btn-vista-registro');
-
-    if (btnLogin) btnLogin.onclick = () => {
-        navigateTo('vista-autenticacion');
-        tabLogin.click();
-    };
-    if (btnReg) btnReg.onclick = () => {
-        navigateTo('vista-autenticacion');
-        tabRegister.click();
-    };
-}
-
-setupAuthEvents();
-
-tabLogin.onclick = () => {
-    tabLogin.classList.add('caja-autenticacion__pestana--activa');
-    tabRegister.classList.remove('caja-autenticacion__pestana--activa');
-    formLogin.classList.remove('oculto');
-    formRegister.classList.add('oculto');
-};
-
-tabRegister.onclick = () => {
-    tabRegister.classList.add('caja-autenticacion__pestana--activa');
-    tabLogin.classList.remove('caja-autenticacion__pestana--activa');
-    formRegister.classList.remove('oculto');
-    formLogin.classList.add('oculto');
-};
-
-formRegister.onsubmit = (e) => {
-    e.preventDefault();
-    const name = document.getElementById('nombre-registro').value.trim();
-    const surname = document.getElementById('apellido-registro').value.trim();
-    const email = document.getElementById('email-registro').value.trim();
-    const pass = document.getElementById('pass-registro').value;
-    const genderSelect = document.getElementById('genero-registro');
-    const gender = genderSelect ? genderSelect.value : "";
-    const errorEl = document.getElementById('error-registro');
-
-    errorEl.textContent = "";
-
-    if (!name || !surname) {
-        errorEl.textContent = "Por favor, ingresa tanto tu Nombre como tu Apellido.";
-        return;
-    }
-
-    if (!gender) {
-        errorEl.textContent = "Por favor, selecciona tu género.";
-        return;
-    }
-
-    if (!/^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/.test(email)) {
-        errorEl.textContent = "El correo debe tener un dominio válido después del @.";
-        return;
-    }
-
-    if (pass.length < 6) {
-        errorEl.textContent = "La contraseña debe tener al menos 6 caracteres/dígitos.";
-        return;
-    }
-
-    if (users.find(u => u.email === email)) {
-        errorEl.textContent = "El correo ya está registrado.";
-        return;
-    }
-
-    const formatName = (str) => {
-        return str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    };
-
-    users.push({ 
-        name: `${formatName(name)} ${formatName(surname)}`, 
-        email, 
-        pass, 
-        gender 
+function updateFlightSelect() {
+    reserveFlightSelect.innerHTML = '<option value="" disabled selected>Seleccione un vuelo</option>';
+    flights.forEach(f => {
+        reserveFlightSelect.innerHTML += `<option value="${f.id}">${f.flightNumber} - ${f.origin} -> ${f.destination} (${f.model})</option>`;
     });
-    alert("Usuario registrado. Ya puedes ingresar.");
-    tabLogin.click();
-    formRegister.reset();
-};
-
-formLogin.onsubmit = (e) => {
-    e.preventDefault();
-    const email = document.getElementById('email-ingreso').value;
-    const pass = document.getElementById('pass-ingreso').value;
-
-    const user = users.find(u => u.email === email && u.pass === pass);
-    if (!user) {
-        document.getElementById('error-ingreso').textContent = "Credenciales incorrectas.";
-        return;
-    }
-
-    currentUser = user;
-    updateAuthHeader();
-    navigateTo('vista-inicio');
-    setTimeout(() => {
-        alert(`Bienvenido, ${user.name}`);
-    }, 450); // Esperar a que termine la animación
-};
-
-function updateAuthHeader() {
-    if (currentUser) {
-        authStatus.innerHTML = `
-            <div class="user-badge" style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; text-align: right;" onclick="navigateTo('vista-perfil')">
-                <div style="line-height: 1.2;">
-                    <span class="user-badge__name" style="display: block; font-weight: 700; color: inherit; font-size: 0.95rem;">${currentUser.name}</span>
-                    <span style="font-size: 0.75rem; color: #64748B;">Mi Perfil</span>
-                </div>
-                <div style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #3B82F6; display: flex; align-items: center; justify-content: center; background: rgba(59, 130, 246, 0.1); color: #3B82F6;">
-                    <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                </div>
-            </div>
-            <button class="boton boton--secundario" style="margin-left: 0.5rem; padding: 0.4rem 1rem;" onclick="logout(); event.stopPropagation();">Salir</button>
-        `;
-
-        // Llenar datos del perfil
-        const valNombre = document.getElementById('perfil-nombre-val');
-        const valEmail = document.getElementById('perfil-email-val');
-        const valGenero = document.getElementById('perfil-genero-val');
-        if (valNombre) valNombre.textContent = currentUser.name;
-        if (valEmail) valEmail.textContent = currentUser.email;
-        if (valGenero) valGenero.textContent = currentUser.gender || "No especificado";
-
-    } else {
-        authStatus.innerHTML = `
-            <button class="boton boton--secundario" id="btn-vista-registro">Registrarse</button>
-            <button class="boton boton--primario encabezado__auth" id="btn-vista-ingreso">Iniciar Sesión</button>
-        `;
-        setupAuthEvents();
-    }
 }
 
-window.logout = () => {
-    currentUser = null;
-    updateAuthHeader();
-    navigateTo('vista-inicio');
-};
-
-// --- Lógica de Administración de Vuelos ---
-formAdmin.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    if (!currentUser) {
-        alert("Debes iniciar sesión para programar un vuelo.");
-        navigateTo('vista-autenticacion');
-        return;
-    }
-    const flightNum = document.getElementById('numero-vuelo').value.trim();
-    const pais = selectPais ? selectPais.value : '';
-    const estado = selectEstado ? selectEstado.value : '';
-    const paisOrigen = selectPaisOrigen ? selectPaisOrigen.value : '';
-    const estadoOrigen = selectEstadoOrigen ? selectEstadoOrigen.value : '';
-    const model = document.getElementById('modelo-avion').value;
-
-    if (!flightNum || !pais || !estado || !paisOrigen || !estadoOrigen || !model) {
-        alert("Por favor completa todos los campos del vuelo.");
-        return;
-    }
-
-    if (pais === paisOrigen && estado === estadoOrigen) {
-        alert("Error: El país y estado de origen no pueden ser exactamente los mismos que el destino.");
-        return;
-    }
-
-    const destination = `${estado}, ${pais}`;
-    const origin = `${estadoOrigen}, ${paisOrigen}`;
-
+function generateSeats(model) {
     const config = airplaneModels[model];
     let seats = [];
-
     for (let r = 1; r <= config.rows; r++) {
         for (let c = 0; c < config.cols; c++) {
             const letter = SEAT_LETTERS[c];
             const seatId = `${r}${letter}`;
-
             let type = "trasero";
             if (r <= 2) type = "excellence";
             else if (r <= 4) type = "priority";
             else if (r === 5) type = "xl";
             else if (r <= 8) type = "delantero";
-
             let isEmergency = false;
             if (r === Math.floor(config.rows / 2) || r === Math.floor(config.rows / 2) + 1) {
                 isEmergency = true;
                 type = "emergencia";
             }
 
-            seats.push({
-                id: seatId, row: r, colIndex: c, type: type, isEmergency: isEmergency, occupiedBy: null
-            });
+            let esAccesible = false;
+            if (!isEmergency) {
+                if (model === "ATR 72" && r >= config.rows - 1 && (c === 1 || c === 2)) esAccesible = true;
+                else if (model === "Airbus A320" && r <= 2 && (c === 2 || c === 3)) esAccesible = true;
+                else if (model === "Boeing 767" && r <= 2 && (c === 2 || c === 4)) esAccesible = true;
+                else if (model === "Airbus A330" && r <= 3 && (c === 2 || c === 5)) esAccesible = true;
+                else if (model === "Boeing 777" && r <= 4 && (c === 3 || c === 6)) esAccesible = true;
+            }
+
+            seats.push({ id: seatId, row: r, colIndex: c, type: type, isEmergency: isEmergency, esAccesible: esAccesible, occupiedBy: null });
         }
     }
+    return seats;
+}
 
-    const newFlight = { id: Date.now().toString(), flightNumber: flightNum, origin: origin, destination: destination, model: model, seats: seats };
-    flights.push(newFlight);
-    formAdmin.reset();
-    renderAdminFlights();
+function initDefaultFlights() {
+    flights = [
+        { id: "1", flightNumber: "AV-101", origin: "Madrid, España", destination: "París, Francia", model: "Airbus A320" },
+        { id: "2", flightNumber: "AV-202", origin: "Buenos Aires, Argentina", destination: "Santiago, Chile", model: "Boeing 767" },
+        { id: "3", flightNumber: "AV-303", origin: "Tokio, Japón", destination: "Seúl, Corea del Sur", model: "Airbus A330" },
+        { id: "4", flightNumber: "AV-404", origin: "Nueva York, Estados Unidos", destination: "Londres, Reino Unido", model: "Boeing 777" },
+        { id: "5", flightNumber: "AV-505", origin: "Lima, Perú", destination: "Cusco, Perú", model: "ATR 72" }
+    ];
+    flights.forEach(f => f.seats = generateSeats(f.model));
     updateFlightSelect();
-    alert("Vuelo programado exitosamente.");
-});
-
-function renderAdminFlights() {
-    adminFlightList.innerHTML = flights.length === 0 ? '<p class="texto-silenciado">No hay vuelos programados.</p>' : '';
-    flights.forEach(f => {
-        const asientosOcupados = f.seats.filter(s => s.occupiedBy).length;
-        adminFlightList.innerHTML += `
-            <div class="tarjeta-lista">
-                <div class="tarjeta-lista__info">
-                    <span class="tarjeta-lista__title">${f.flightNumber} - Ruta: ${f.origin} a ${f.destination}</span>
-                    <span class="tarjeta-lista__subtitle">Aeronave: ${f.model}</span>
-                </div>
-                <div class="tarjeta-lista__badge btn--pill">${asientosOcupados} Asientos Ocupados</div>
-            </div>
-        `;
-    });
 }
 
 function updateFlightSelect() {
@@ -566,22 +331,68 @@ reserveFlightSelect.addEventListener('change', (e) => {
     renderPassengerList();
 });
 
+function calcularEdad(fechaNacimiento) {
+    const hoy = new Date();
+    const cumpleanos = new Date(fechaNacimiento);
+    let edad = hoy.getFullYear() - cumpleanos.getFullYear();
+    const m = hoy.getMonth() - cumpleanos.getMonth();
+    if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+        edad--;
+    }
+    return edad;
+}
+
 formAddPassenger.addEventListener('submit', (e) => {
     e.preventDefault();
+
+    if (currentReservationSession.passengers.length >= 8) {
+        showAlert("No se pueden agregar más de 8 pasajeros por reservación.");
+        return;
+    }
     const name = document.getElementById('nombre-pasajero').value.trim();
     const surname = document.getElementById('apellido-pasajero').value.trim();
-    const age = parseInt(document.getElementById('edad-pasajero').value);
+    const dobValue = document.getElementById('fecha-nacimiento-pasajero').value;
     const disability = document.getElementById('discapacidad-pasajero').checked;
 
-    if (!name || !surname || isNaN(age) || age <= 0) {
-        alert("Por favor, ingrese un nombre y apellido válidos y una edad mayor a 0.");
+    if (!name || !surname || !dobValue) {
+        showAlert("Por favor, complete todos los campos obligatorios.");
         return;
     }
 
-    currentReservationSession.passengers.push({
-        id: Date.now().toString() + Math.random().toString(36).substr(2, 5),
-        name: `${name} ${surname}`, age, disability, seatId: null
-    });
+    const age = calcularEdad(dobValue);
+
+    if (age < 0 || age > 110) {
+        showAlert("Por favor, ingrese una fecha de nacimiento válida.");
+        return;
+    }
+
+    if (age === 0 && (new Date(dobValue) > new Date())) {
+        showAlert("La fecha de nacimiento no puede ser en el futuro.");
+        return;
+    }
+
+    if (editingPassengerId) {
+        // Modo Edición
+        const index = currentReservationSession.passengers.findIndex(p => p.id === editingPassengerId);
+        if (index !== -1) {
+            currentReservationSession.passengers[index].name = `${name} ${surname}`;
+            currentReservationSession.passengers[index].age = age;
+            currentReservationSession.passengers[index].disability = disability;
+            currentReservationSession.passengers[index].dob = dobValue;
+            // Resetear ID de edición y botón
+            editingPassengerId = null;
+            formAddPassenger.querySelector('button[type="submit"]').textContent = 'Añadir Pasajero';
+            formAddPassenger.querySelector('button[type="submit"]').classList.remove('boton--primario');
+            formAddPassenger.querySelector('button[type="submit"]').classList.add('boton--secundario');
+        }
+    } else {
+        // Modo Añadir
+        currentReservationSession.passengers.push({
+            id: Date.now().toString() + Math.random().toString(36).substr(2, 5),
+            name: `${name} ${surname}`, age, disability, seatId: null,
+            dob: dobValue
+        });
+    }
 
     formAddPassenger.reset();
     renderPassengerList();
@@ -589,50 +400,118 @@ formAddPassenger.addEventListener('submit', (e) => {
 
 function renderPassengerList() {
     passengerList.innerHTML = '';
-    let hasMinor = false, hasAdult = false;
-
     currentReservationSession.passengers.forEach((p, idx) => {
-        if (p.age < 18) hasMinor = true;
-        if (p.age >= 18) hasAdult = true;
-
         passengerList.innerHTML += `
-            <div class="tarjeta-lista">
+            <div class="tarjeta-lista ${editingPassengerId === p.id ? 'border-active' : ''}" style="${editingPassengerId === p.id ? 'border-left: 4px solid var(--color-primary)' : ''}">
                 <div class="tarjeta-lista__info">
                     <span class="tarjeta-lista__title">Pasajero ${idx + 1}: ${p.name}</span>
                     <span class="tarjeta-lista__subtitle">Edad: ${p.age} | Discapacidad: ${p.disability ? 'Sí' : 'No'}</span>
                 </div>
-                <button type="button" class="boton boton--icono texto-silenciado" onclick="removePassenger('${p.id}')">&times;</button>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button type="button" class="boton boton--icono" style="color: #3B82F6;" onclick="editPassenger('${p.id}')">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    </button>
+                    <button type="button" class="boton boton--icono texto-silenciado" onclick="removePassenger('${p.id}')">&times;</button>
+                </div>
             </div>
         `;
     });
 
-    btnProceedSeats.disabled = true;
+    btnProceedSeats.disabled = currentReservationSession.passengers.length === 0;
     reserveError.textContent = '';
+}
 
-    if (currentReservationSession.passengers.length > 0) {
-        if (hasMinor && !hasAdult) {
-            reserveError.textContent = 'Error: Todo pasajero menor de edad debe ir acompañado de al menos un adulto en la misma reserva.';
+function verificarPasajeros() {
+    let cantidadAdultos = 0;
+    let cantidadMenores = 0;
+
+    currentReservationSession.passengers.forEach(p => {
+        if (p.age >= 18) {
+            cantidadAdultos++;
         } else {
-            btnProceedSeats.disabled = false;
+            cantidadMenores++;
         }
+    });
+
+    if (cantidadMenores > 0 && cantidadAdultos === 0) {
+        showAlert("Error: No se puede proceder porque hay menores de edad sin adulto acompañante. Se requiere al menos un adulto.");
+        return false;
     }
+
+    if (cantidadAdultos >= 1) {
+        return true;
+    }
+
+    return false;
 }
 
 window.removePassenger = function (id) {
+    if (editingPassengerId === id) {
+        editingPassengerId = null;
+        formAddPassenger.reset();
+        formAddPassenger.querySelector('button[type="submit"]').textContent = 'Añadir Pasajero';
+        formAddPassenger.querySelector('button[type="submit"]').classList.remove('boton--primario');
+        formAddPassenger.querySelector('button[type="submit"]').classList.add('boton--secundario');
+    }
     currentReservationSession.passengers = currentReservationSession.passengers.filter(p => p.id !== id);
     renderPassengerList();
+}
+
+window.editPassenger = function (id) {
+    const passenger = currentReservationSession.passengers.find(p => p.id === id);
+    if (!passenger) return;
+
+    editingPassengerId = id;
+
+    // Separar nombre y apellido (asumiendo que se guardó como "Nombre Apellido")
+    const names = passenger.name.split(' ');
+    const name = names[0];
+    const surname = names.slice(1).join(' ');
+
+    document.getElementById('nombre-pasajero').value = name;
+    document.getElementById('apellido-pasajero').value = surname;
+    document.getElementById('discapacidad-pasajero').checked = passenger.disability;
+
+
+
+    if (passenger.dob) {
+        document.getElementById('fecha-nacimiento-pasajero').value = passenger.dob;
+    }
+
+    const btnSubmit = formAddPassenger.querySelector('button[type="submit"]');
+    btnSubmit.textContent = 'Actualizar Datos';
+    btnSubmit.classList.remove('boton--secundario');
+    btnSubmit.classList.add('boton--primario');
+
+    renderPassengerList();
+
+    // Scroll al formulario
+    formAddPassenger.scrollIntoView({ behavior: 'smooth' });
 }
 
 function resetReserveForm() {
     reserveFlightSelect.value = '';
     passengerSection.classList.add('oculto');
     currentReservationSession = { flightId: null, passengers: [], currentSelectingPassengerId: null };
+    editingPassengerId = null;
+    if (formAddPassenger) {
+        formAddPassenger.reset();
+        const btnSubmit = formAddPassenger.querySelector('button[type="submit"]');
+        if (btnSubmit) {
+            btnSubmit.textContent = 'Añadir Pasajero';
+            btnSubmit.classList.remove('boton--primario');
+            btnSubmit.classList.add('boton--secundario');
+        }
+    }
     renderPassengerList();
 }
 
 // --- Lógica de Mapa de Asientos ---
 btnProceedSeats.addEventListener('click', () => {
     if (!currentReservationSession.flightId || currentReservationSession.passengers.length === 0) return;
+
+    if (!verificarPasajeros()) return;
+
     currentReservationSession.currentSelectingPassengerId = currentReservationSession.passengers[0].id;
     renderSeatAllocations();
     renderAirplaneCabin();
@@ -676,8 +555,15 @@ function renderAirplaneCabin() {
     const config = airplaneModels[flight.model];
     airplaneCabin.innerHTML = '';
 
+    const frontDoor = document.createElement('div');
+    frontDoor.className = 'puerta-avion';
+    airplaneCabin.appendChild(frontDoor);
+
     const encabezadoRow = document.createElement('div');
     encabezadoRow.className = 'etiquetas-cabina';
+
+    const spacerL = document.createElement('div'); spacerL.className = 'ventana-simulada'; spacerL.style.visibility = 'hidden'; encabezadoRow.appendChild(spacerL);
+
     let colCounter = 0;
     config.layout.forEach((blockCount, layoutIndex) => {
         for (let i = 0; i < blockCount; i++) {
@@ -688,24 +574,34 @@ function renderAirplaneCabin() {
             const pasillo = document.createElement('div'); pasillo.className = 'pasillo'; encabezadoRow.appendChild(pasillo);
         }
     });
+
+    const spacerR = document.createElement('div'); spacerR.className = 'ventana-simulada'; spacerR.style.visibility = 'hidden'; encabezadoRow.appendChild(spacerR);
+
     airplaneCabin.appendChild(encabezadoRow);
 
     for (let r = 1; r <= config.rows; r++) {
         const rowDiv = document.createElement('div'); rowDiv.className = 'fila-cabina';
+
+        const winL = document.createElement('div'); winL.className = 'ventana-simulada'; rowDiv.appendChild(winL);
+
         let c = 0;
         config.layout.forEach((blockCount, layoutIndex) => {
             for (let i = 0; i < blockCount; i++) {
                 const seatData = flight.seats.find(s => s.row === r && s.colIndex === c);
                 const seatEl = document.createElement('div');
                 seatEl.className = `asiento asiento--${seatData.type}`;
-                seatEl.textContent = seatData.id;
+                if (seatData.esAccesible) seatEl.classList.add('asiento--accesible');
+
+                seatEl.innerHTML = seatData.id;
+                if (seatData.esAccesible) {
+                    seatEl.innerHTML += `<span class="icono-discapacidad"> </span>`;
+                }
 
                 if (seatData.occupiedBy) seatEl.classList.add('asiento--no-disponible');
 
                 const passengerWithSeat = currentReservationSession.passengers.find(p => p.seatId === seatData.id);
                 if (passengerWithSeat) {
-                    seatEl.className = 'asiento asiento--seleccionado';
-                    seatEl.textContent = passengerWithSeat.name.charAt(0);
+                    seatEl.classList.add('asiento--seleccionado');
                 }
 
                 seatEl.addEventListener('click', () => handleSeatClick(seatData));
@@ -716,39 +612,35 @@ function renderAirplaneCabin() {
                 const pasillo = document.createElement('div'); pasillo.className = 'pasillo-cabina'; pasillo.textContent = r; rowDiv.appendChild(pasillo);
             }
         });
+
+        const winR = document.createElement('div'); winR.className = 'ventana-simulada'; rowDiv.appendChild(winR);
+
         airplaneCabin.appendChild(rowDiv);
     }
+
+    const backDoor = document.createElement('div');
+    backDoor.className = 'puerta-avion';
+    airplaneCabin.appendChild(backDoor);
 }
 
 function handleSeatClick(seatData) {
-    if (seatData.occupiedBy) { alert("Este asiento ya está ocupado."); return; }
+    if (seatData.occupiedBy) { showAlert("Este asiento ya está ocupado."); return; }
     const currentPassenger = currentReservationSession.passengers.find(p => p.id === currentReservationSession.currentSelectingPassengerId);
     if (!currentPassenger) return;
 
     if (seatData.isEmergency) {
         if (currentPassenger.age < 18 || currentPassenger.age >= 60 || currentPassenger.disability) {
-            alert("Políticas de aviación: Menores de edad, personas de 3era edad (60+), o personas con discapacidad NO pueden reservar asientos en salidas de emergencia."); return;
+            showAlert("Políticas de aviación: Menores de edad, personas de 3era edad (60+), o personas con discapacidad NO pueden reservar asientos en salidas de emergencia."); return;
         }
     }
 
-    if (currentPassenger.age < 18) {
-        const flight = flights.find(f => f.id === currentReservationSession.flightId);
-        const hasAdjacentAdult = currentReservationSession.passengers.some(p => {
-            if (p.age >= 18 && p.seatId) {
-                const adultSeat = flight.seats.find(s => s.id === p.seatId);
-                // Asiento contiguo: Misma fila y columna adyacente
-                if (adultSeat && adultSeat.row === seatData.row && Math.abs(adultSeat.colIndex - seatData.colIndex) === 1) {
-                    return true;
-                }
-            }
-            return false;
-        });
-
-        if (!hasAdjacentAdult) {
-            alert("Validación: Todo menor de edad debe ir acompañado de un representante en un asiento contiguo. Por favor, asigne primero el asiento del adulto y luego seleccione un asiento al lado para el menor.");
+    if (seatData.esAccesible) {
+        if (!currentPassenger.disability) {
+            showAlert("Este asiento es preferencial para personas con discapacidad o movilidad reducida. Solo puede ser seleccionado por pasajeros que hayan declarado esta necesidad.");
             return;
         }
     }
+
 
     currentPassenger.seatId = seatData.id;
     const nextUnassigned = currentReservationSession.passengers.find(p => !p.seatId);
@@ -758,7 +650,7 @@ function handleSeatClick(seatData) {
 }
 
 btnCancelReservation.addEventListener('click', () => {
-    if (confirm("¿Estás seguro de que deseas cancelar la operación actual?")) { 
+    showConfirm("¿Estás seguro de que deseas cancelar la operación actual?", () => {
         if (editingReservationId) {
             // Restore original seats
             const res = globalReservations.find(r => r.id === editingReservationId);
@@ -773,17 +665,91 @@ btnCancelReservation.addEventListener('click', () => {
             resetReserveForm();
             navigateTo('vista-mis-reservas');
         } else {
-            resetReserveForm(); navigateTo('vista-reservar'); 
+            resetReserveForm(); navigateTo('vista-reservar');
         }
-    }
+    });
 });
 
 btnConfirmReservation.addEventListener('click', () => {
     const flight = flights.find(f => f.id === currentReservationSession.flightId);
+    const config = airplaneModels[flight.model];
+
+    // Validación por Bloque para menores
+    const hasMinor = currentReservationSession.passengers.some(p => p.age < 18);
+    if (hasMinor) {
+        const minors = currentReservationSession.passengers.filter(p => p.age < 18);
+        const adults = currentReservationSession.passengers.filter(p => p.age >= 18);
+        const seats = currentReservationSession.passengers.map(p => flight.seats.find(s => s.id === p.seatId));
+
+        if (minors.length > adults.length) {
+            // Caso: Más menores que adultos -> Aplicar Área de Supervisión (Cluster completo)
+            const visited = new Set();
+            const startSeat = seats.find(s => {
+                const p = currentReservationSession.passengers.find(pass => pass.seatId === s.id);
+                return p.age >= 18;
+            });
+
+            if (startSeat) {
+                visited.add(startSeat.id);
+                let head = 0;
+                const queue = [startSeat];
+                while (head < queue.length) {
+                    const curr = queue[head++];
+                    seats.forEach(s => {
+                        if (!visited.has(s.id)) {
+                            // Adyacencia para el área de supervisión (incluye diagonales y pasillo cercano)
+                            const isAdjacent = Math.abs(curr.row - s.row) <= 1 && Math.abs(curr.colIndex - s.colIndex) <= 1;
+                            if (isAdjacent) {
+                                visited.add(s.id);
+                                queue.push(s);
+                            }
+                        }
+                    });
+                }
+            }
+
+            if (visited.size !== seats.length) {
+                showAlert("Cuando hay más menores que adultos, todos los pasajeros de la reserva deben estar en asientos cercanos (área de supervisión).");
+                return;
+            }
+        } else {
+            // Caso: Adultos >= Menores -> Validación individual
+            for (const minor of minors) {
+                const minorSeat = flight.seats.find(s => s.id === minor.seatId);
+                const isSupervised = adults.some(a => {
+                    const adultSeat = flight.seats.find(s => s.id === a.seatId);
+                    // Estrictamente al lado: misma fila, columna adyacente y mismo bloque (sin pasillo)
+                    const mismaFila = adultSeat.row === minorSeat.row;
+                    const colAdyacente = Math.abs(adultSeat.colIndex - minorSeat.colIndex) === 1;
+
+                    let mismoBloque = false;
+                    let cur = 0;
+                    for (const b of config.layout) {
+                        if (adultSeat.colIndex >= cur && adultSeat.colIndex < cur + b &&
+                            minorSeat.colIndex >= cur && minorSeat.colIndex < cur + b) {
+                            mismoBloque = true; break;
+                        }
+                        cur += b;
+                    }
+                    return mismaFila && colAdyacente && mismoBloque;
+                });
+
+                if (!isSupervised) {
+                    showAlert(`Por seguridad, el menor ${minor.name} debe tener un asiento estrictamente al lado de un representante adulto (misma fila y sin pasillo de por medio).`);
+                    return;
+                }
+            }
+        }
+    }
+
     currentReservationSession.passengers.forEach(p => {
         const asiento = flight.seats.find(s => s.id === p.seatId);
         if (asiento) {
             asiento.occupiedBy = { name: p.name, age: p.age, disability: p.disability };
+        }
+        // Generar un ID de ticket único para el pasajero si no tiene uno
+        if (!p.ticketId) {
+            p.ticketId = "TK-" + Math.random().toString(36).substr(2, 6).toUpperCase();
         }
     });
 
@@ -794,21 +760,20 @@ btnConfirmReservation.addEventListener('click', () => {
             globalReservations[resIndex].date = new Date().toLocaleString(); // Update date
         }
         editingReservationId = null;
-        alert("Reserva actualizada con éxito.");
+        showAlert("Reserva actualizada con éxito.");
     } else {
         const newRes = {
             id: "RES-" + Date.now().toString().substr(6),
             flightNumber: flight.flightNumber, origin: flight.origin, destination: flight.destination, model: flight.model, date: new Date().toLocaleString(),
             passengers: [...currentReservationSession.passengers],
-            madeBy: currentUser ? currentUser.name : "Invitado",
+            madeBy: "Invitado",
             createdAt: Date.now() // Timestamp para validación de reversión
         };
         globalReservations.push(newRes);
-        alert("Reserva confirmada con éxito.");
+        showAlert("Reserva confirmada con éxito.");
     }
-    
+
     resetReserveForm();
-    renderAdminFlights(); // Actualizar el contador de la lista de vuelos
     navigateTo('vista-mis-reservas');
 });
 
@@ -869,7 +834,7 @@ function renderPrintView() {
             const origShort = origParts[0].substring(0, 4).toUpperCase();
             const origCity = origParts[0].trim();
             const refId = res.id.toUpperCase();
-            
+
             ticketsHTML += `
             <div style="display: flex; gap: 2rem; align-items: stretch; justify-content: center; flex-wrap: wrap; padding-bottom: 1rem; width: 100%;">
                 <!-- Front Ticket -->
@@ -932,6 +897,7 @@ function renderPrintView() {
                         <div style="margin-bottom: 1.5rem;">
                             <span style="font-size: 0.75rem; color: #94A3B8; text-transform: uppercase;">Pasajero</span>
                             <div style="font-size: 1.1rem; font-weight: 600;">${p.name.toUpperCase()}</div>
+                            <div style="font-size: 0.7rem; color: #64748B; margin-top: 0.2rem; font-weight: 600;">ID PASAJERO: ${p.ticketId || 'PENDIENTE'}</div>
                         </div>
                         
                         <div>
@@ -997,14 +963,14 @@ function renderPrintView() {
                         const asiento = flight.seats.find(s => s.id === p.seatId);
                         if (asiento) asiento.occupiedBy = null;
                     });
-                    
+
                     currentReservationSession = {
                         flightId: flight.id,
                         passengers: JSON.parse(JSON.stringify(res.passengers)), // Deep copy
                         currentSelectingPassengerId: res.passengers[0].id
                     };
-                    
-                    renderSeatAllocations(); 
+
+                    renderSeatAllocations();
                     renderAirplaneCabin();
                     navigateTo('vista-mapa-asientos');
                 }
@@ -1015,11 +981,11 @@ function renderPrintView() {
             const now = Date.now();
             const fourHours = 4 * 60 * 60 * 1000;
             if (now - res.createdAt > fourHours) {
-                alert("Error: Solo puedes revertir una reserva hasta 4 horas después de haberla realizado.");
+                showAlert("Error: Solo puedes revertir una reserva hasta 4 horas después de haberla realizado.");
                 return;
             }
 
-            if (confirm("¿Estás seguro de que deseas revertir esta reserva? Se liberarán los asientos.")) {
+            showConfirm("¿Estás seguro de que deseas revertir esta reserva? Se liberarán los asientos.", () => {
                 // Liberar asientos
                 const flight = flights.find(f => f.flightNumber === res.flightNumber);
                 if (flight) {
@@ -1031,10 +997,9 @@ function renderPrintView() {
 
                 // Eliminar reserva
                 globalReservations = globalReservations.filter(r => r.id !== res.id);
-                alert("Reserva revertida exitosamente.");
-                renderAdminFlights(); // Actualizar el contador de la lista de vuelos
+                showAlert("Reserva revertida exitosamente.");
                 renderPrintView(); // Refrescar lista
-            }
+            });
         };
     }
 }
@@ -1048,16 +1013,16 @@ if (btnScrollUp && btnScrollDown && scrollMapa) {
     btnScrollUp.addEventListener('click', () => {
         scrollMapa.scrollBy({ top: -300, behavior: 'smooth' });
     });
-    
+
     btnScrollDown.addEventListener('click', () => {
         scrollMapa.scrollBy({ top: 300, behavior: 'smooth' });
     });
-    
+
     scrollMapa.addEventListener('scroll', () => {
         const svgUp = btnScrollUp.querySelector('svg');
         const svgDown = btnScrollDown.querySelector('svg');
         const maxScroll = scrollMapa.scrollHeight - scrollMapa.clientHeight;
-        
+
         if (svgUp) {
             if (scrollMapa.scrollTop > 10) {
                 svgUp.style.opacity = '1';
@@ -1067,7 +1032,7 @@ if (btnScrollUp && btnScrollDown && scrollMapa) {
                 btnScrollUp.style.cursor = 'default';
             }
         }
-        
+
         if (svgDown) {
             if (scrollMapa.scrollTop < maxScroll - 10) {
                 svgDown.style.opacity = '1';
@@ -1083,8 +1048,11 @@ if (btnScrollUp && btnScrollDown && scrollMapa) {
         if (minimapaIndicador && maxScroll > 0) {
             let porcentaje = scrollMapa.scrollTop / maxScroll;
             // Limitamos a un máximo de 75px (contenedor 100px - indicador 25px)
-            let topPosition = porcentaje * 75; 
+            let topPosition = porcentaje * 75;
             minimapaIndicador.style.top = `${topPosition}px`;
         }
     });
 }
+
+// Inicialización de la aplicación
+initDefaultFlights();
