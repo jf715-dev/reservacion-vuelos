@@ -31,18 +31,12 @@
             <nav class="encabezado__centro" style="display: flex; gap: 2.5rem; align-items: center;">
                 <a href="#" class="encabezado__enlace encabezado__enlace--activo" data-target="vista-inicio"
                     style="text-decoration: none; color: #0F172A; font-weight: 600; font-size: 0.9rem;">Inicio</a>
-                <a href="#" class="encabezado__enlace" data-target="vista-admin"
-                    style="text-decoration: none; color: #64748B; font-weight: 500; font-size: 0.9rem;">Administración</a>
                 <a href="#" class="encabezado__enlace" data-target="vista-reservar"
                     style="text-decoration: none; color: #64748B; font-weight: 500; font-size: 0.9rem;">Reservar</a>
                 <a href="#" class="encabezado__enlace" data-target="vista-mis-reservas"
                     style="text-decoration: none; color: #64748B; font-weight: 500; font-size: 0.9rem;">Mis Reservas</a>
             </nav>
             <div id="estado-autenticacion" class="encabezado__derecha" style="display: flex; gap: 1rem;">
-                <button class="boton boton--secundario" id="btn-vista-registro"
-                    style="background: transparent; color: #3B82F6; border: 1.5px solid #3B82F6; border-radius: 999px; padding: 0.5rem 1.5rem;">Registrarse</button>
-                <button class="boton boton--primario encabezado__auth" id="btn-vista-ingreso"
-                    style="border-radius: 999px; padding: 0.5rem 1.5rem;">Iniciar Sesión</button>
             </div>
         </header>
 
@@ -66,8 +60,8 @@
                 <div class="portada__izquierda"
                     style="position: absolute; top: 0; left: 0; width: 60%; height: 100%; z-index: 1;">
                     <div style="width: 100%; height: 100%; clip-path: url(#wave-clip-left); background-color: #3B82F6;">
-                        <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2000&auto=format&fit=crop"
-                            alt="Plane" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.95;">
+                        <img src="avion1.avif" alt="Plane"
+                            style="width: 100%; height: 100%; object-fit: cover; opacity: 0.95;">
                     </div>
                 </div>
 
@@ -77,83 +71,20 @@
 
                     <p class="portada__descripcion-nueva"
                         style="font-size: 1.5rem; font-weight: 500; color: #0F172A; margin-bottom: 0.2rem; font-family: var(--font-main);">
-                        Listos para el Despegue
+                        ¿Listos para el Despegue?
                     </p>
 
                     <h2 class="portada__titulo-nuevo" id="titulo-inicio"
-                        style="font-family: Impact, 'Arial Narrow Bold', sans-serif; font-size: 5rem; font-weight: 900; line-height: 0.95; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 0px; background: url('https://img.freepik.com/fotos-premium/cielo-azul-nubes-blancas-claras_44783-7.jpg') center/cover fixed; -webkit-background-clip: text; -webkit-text-fill-color: transparent; color: transparent; filter: drop-shadow(5px 8px 8px rgba(0,0,0,0.3)) drop-shadow(0px 0px 2px rgba(0,0,0,0.4));">
+                        style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; font-size: 5.5rem; font-weight: 900; line-height: 0.85; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: -1px; color: #0B396B; filter: drop-shadow(0px 4px 4px rgba(0,0,0,0.1));">
                         SERVICIO DE RESERVACION<br>DE VUELOS EN LINEA
                     </h2>
 
                 </div>
             </section>
 
-            <!-- Admin View -->
-            <section class="vista" id="vista-admin"
-                style="background: linear-gradient(rgba(248, 250, 252, 0.9), rgba(248, 250, 252, 0.9)), url('https://images.unsplash.com/photo-1542296332-2e4473faf563?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat fixed;">
-                <div class="contenedor">
-                    <h2 class="vista__titulo">Administración de Vuelos</h2>
-                    <p class="vista__descripcion">Programa nuevos vuelos y selecciona el modelo de aeronave.</p>
-
-                    <form class="formulario" id="formulario-admin">
-                        <div class="formulario__grupo">
-                            <label for="numero-vuelo" class="formulario__etiqueta">Número de Vuelo</label>
-                            <input type="text" id="numero-vuelo" class="formulario__campo" required
-                                placeholder="Ej: TA-104">
-                        </div>
-                        <div class="formulario__fila">
-                            <div class="formulario__grupo" style="flex: 1;">
-                                <label for="pais-origen" class="formulario__etiqueta">País de Origen</label>
-                                <select id="pais-origen" class="formulario__campo" required>
-                                    <option value="" disabled selected>Seleccione un país</option>
-                                </select>
-                            </div>
-                            <div class="formulario__grupo" style="flex: 1;">
-                                <label for="estado-origen" class="formulario__etiqueta">Estado/Provincia
-                                    (Origen)</label>
-                                <select id="estado-origen" class="formulario__campo" required disabled>
-                                    <option value="" disabled selected>Seleccione un estado</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="formulario__fila">
-                            <div class="formulario__grupo" style="flex: 1;">
-                                <label for="pais-vuelo" class="formulario__etiqueta">País de Destino</label>
-                                <select id="pais-vuelo" class="formulario__campo" required>
-                                    <option value="" disabled selected>Seleccione un país</option>
-                                </select>
-                            </div>
-                            <div class="formulario__grupo" style="flex: 1;">
-                                <label for="estado-vuelo" class="formulario__etiqueta">Estado/Provincia
-                                    (Destino)</label>
-                                <select id="estado-vuelo" class="formulario__campo" required disabled>
-                                    <option value="" disabled selected>Seleccione un estado</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="formulario__grupo">
-                            <label for="modelo-avion" class="formulario__etiqueta">Modelo de Aeronave</label>
-                            <select id="modelo-avion" class="formulario__campo" required>
-                                <option value="" disabled selected>Seleccione un modelo</option>
-                                <option value="ATR 72">ATR 72 (Regionales Cortos, 2-2)</option>
-                                <option value="Airbus A320">Airbus A320 (Medio Alcance, 3-3)</option>
-                                <option value="Boeing 767">Boeing 767 (Internacionales Medianos, 2-3-2)</option>
-                                <option value="Airbus A330">Airbus A330 (Intercontinentales, 2-4-2)</option>
-                                <option value="Boeing 777">Boeing 777 (Larga Distancia, 3-4-3)</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="boton boton--primario formulario__enviar">Crear Vuelo</button>
-                    </form>
-
-                    <div class="lista-vuelos mt-4" id="lista-vuelos-admin">
-                        <!-- Lista de vuelos programados -->
-                    </div>
-                </div>
-            </section>
-
             <!-- Reserve View (Pasajeros) -->
             <section class="vista" id="vista-reservar"
-                style="background: linear-gradient(rgba(248, 250, 252, 0.9), rgba(248, 250, 252, 0.9)), url('https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat fixed;">
+                style="background: linear-gradient(rgba(248, 250, 252, 0.9), rgba(248, 250, 252, 0.9)), url('reservacion.avif') center/cover no-repeat fixed;">
                 <div class="contenedor">
                     <h2 class="vista__titulo">Nueva Reserva</h2>
                     <p class="vista__descripcion">Selecciona un vuelo y registra a los pasajeros.</p>
@@ -172,16 +103,18 @@
                             <div class="formulario__fila">
                                 <div class="formulario__grupo" style="flex: 1;">
                                     <label class="formulario__etiqueta">Nombre</label>
-                                    <input type="text" id="nombre-pasajero" class="formulario__campo" required>
+                                    <input type="text" id="nombre-pasajero" class="formulario__campo" required
+                                        maxlength="60">
                                 </div>
                                 <div class="formulario__grupo" style="flex: 1;">
                                     <label class="formulario__etiqueta">Apellido</label>
-                                    <input type="text" id="apellido-pasajero" class="formulario__campo" required>
+                                    <input type="text" id="apellido-pasajero" class="formulario__campo" required
+                                        maxlength="60">
                                 </div>
 
                                 <div class="formulario__grupo">
-                                    <label class="formulario__etiqueta">Edad</label>
-                                    <input type="number" id="edad-pasajero" class="formulario__campo" min="1" max="110"
+                                    <label class="formulario__etiqueta">Fecha de Nacimiento</label>
+                                    <input type="date" id="fecha-nacimiento-pasajero" class="formulario__campo"
                                         required>
                                 </div>
                             </div>
@@ -209,7 +142,7 @@
 
             <!-- Seat Map View -->
             <section class="vista vista--sin-scroll" id="vista-mapa-asientos"
-                style="background: linear-gradient(rgba(241, 245, 249, 0.9), rgba(241, 245, 249, 0.9)), url('https://images.unsplash.com/photo-1542296332-2e4473faf563?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat fixed; padding-top: 110px;">
+                style="background: linear-gradient(rgba(241, 245, 249, 0.9), rgba(241, 245, 249, 0.9)), url('mapa-asientos.avif') center/cover no-repeat fixed; padding-top: 80px;">
                 <div class="vista-dividida">
                     <!-- Left Panel (Reservation Info) -->
                     <aside class="vista-dividida__panel vista-dividida__panel--info">
@@ -245,9 +178,10 @@
                                 <div class="leyenda__columna">
                                     <div class="leyenda__elemento"><span
                                             class="asiento asiento--excellence asiento--leyenda"></span> Asientos
-                                        Excellence</div>
+                                        Premium</div>
                                     <div class="leyenda__elemento"><span
-                                            class="asiento asiento--priority asiento--leyenda"></span> Asientos Priority
+                                            class="asiento asiento--priority asiento--leyenda"></span> Asientos
+                                        Prioritarios
                                     </div>
                                     <div class="leyenda__elemento"><span
                                             class="asiento asiento--xl asiento--leyenda"></span> Asientos XL</div>
@@ -267,6 +201,11 @@
                                         Emergencia</div>
                                     <div class="leyenda__elemento"><span
                                             class="asiento asiento--seleccionado asiento--leyenda"></span> Tu Asiento
+                                    </div>
+                                    <div class="leyenda__elemento"><span
+                                            class="asiento asiento--accesible asiento--leyenda"><span
+                                                class="icono-discapacidad" style="display: block;"> </span></span>
+                                        Preferencial
                                     </div>
                                 </div>
                             </div>
@@ -337,244 +276,11 @@
                 </div>
             </section>
 
-            <!-- Vista de Autenticación -->
-            <!-- Vista de Autenticación -->
-            <section class="vista" id="vista-autenticacion"
-                style="background: url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat; display: flex; align-items: flex-start; justify-content: center; padding-top: 110px; padding-bottom: 40px; overflow-y: auto;">
-                <style>
-                    .caja-autenticacion-glass input::placeholder {
-                        color: rgba(30, 41, 59, 0.6);
-                    }
 
-                    .caja-autenticacion-glass input:focus {
-                        border-bottom-color: #3B82F6 !important;
-                    }
-
-                    .caja-autenticacion-glass input:focus+svg {
-                        stroke: #3B82F6 !important;
-                    }
-                </style>
-                <!-- Oscurecedor ligero de fondo -->
-                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.3);">
-                </div>
-
-                <div class="caja-autenticacion-glass"
-                    style="position: relative; z-index: 10; width: 100%; max-width: 460px; padding: 2.5rem; border-radius: 24px; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.4); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
-
-                    <button class="boton boton--icono" id="btn-cerrar-autenticacion"
-                        style="position: absolute; top: 15px; right: 15px; background: rgba(30, 41, 59, 0.1); color: #1E293B; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: all 0.2s; border: none; z-index: 20;">&times;</button>
-
-                    <!-- Formulario Login -->
-                    <form class="formulario" id="formulario-ingreso"
-                        style="display: flex; flex-direction: column; gap: 1.5rem; background: transparent; padding: 0; box-shadow: none;">
-                        <h2
-                            style="text-align: center; font-size: 2rem; font-weight: 800; color: #1E293B; margin-bottom: 0.5rem; letter-spacing: -0.5px;">
-                            Iniciar Sesión</h2>
-
-                        <div style="position: relative;">
-                            <input type="email" id="email-ingreso" required
-                                style="width: 100%; padding: 0.6rem 2rem 0.6rem 0; border: none; border-bottom: 2px solid rgba(30, 41, 59, 0.2); background: transparent; font-size: 0.95rem; color: #1E293B; outline: none; font-weight: 500; transition: all 0.3s;"
-                                placeholder="Correo Electrónico">
-                            <svg viewBox="0 0 24 24"
-                                style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; fill: none; stroke: #1E293B; stroke-width: 2; opacity: 0.5;">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
-                                </path>
-                                <polyline points="22,6 12,13 2,6"></polyline>
-                            </svg>
-                        </div>
-
-                        <div style="position: relative;">
-                            <input type="password" id="pass-ingreso" required
-                                style="width: 100%; padding: 0.6rem 2rem 0.6rem 0; border: none; border-bottom: 2px solid rgba(30, 41, 59, 0.2); background: transparent; font-size: 0.95rem; color: #1E293B; outline: none; font-weight: 500; transition: all 0.3s;"
-                                placeholder="Contraseña">
-                            <svg viewBox="0 0 24 24"
-                                style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; fill: none; stroke: #1E293B; stroke-width: 2; opacity: 0.5;">
-                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                            </svg>
-                        </div>
-
-
-
-                        <button type="submit"
-                            style="width: 100%; padding: 1rem; background: #1E293B; color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 0.5rem; transition: all 0.3s; box-shadow: 0 10px 15px -3px rgba(30, 41, 59, 0.3);">Ingresar</button>
-
-                        <p id="error-ingreso" class="mensaje-error"
-                            style="text-align: center; margin: 0; font-weight: 600;"></p>
-
-                        <p style="text-align: center; font-size: 0.95rem; color: #1E293B; margin-top: 0.5rem;">
-                            ¿No tienes cuenta? <a href="#" id="pestana-registro"
-                                style="font-weight: 800; color: #1E293B; text-decoration: none;">Regístrate</a>
-                        </p>
-                    </form>
-
-                    <!-- Formulario Registro -->
-                    <form class="formulario oculto" id="formulario-registro"
-                        style="display: flex; flex-direction: column; gap: 1.2rem; background: transparent; padding: 0; box-shadow: none;">
-                        <h2
-                            style="text-align: center; font-size: 2rem; font-weight: 800; color: #1E293B; margin-bottom: 0.5rem; letter-spacing: -0.5px;">
-                            Registrarse</h2>
-
-                        <div style="display: flex; gap: 1rem;">
-                            <div style="position: relative; flex: 1;">
-                                <input type="text" id="nombre-registro" required
-                                    style="width: 100%; padding: 0.6rem 2rem 0.6rem 0; border: none; border-bottom: 2px solid rgba(30, 41, 59, 0.2); background: transparent; font-size: 0.95rem; color: #1E293B; outline: none; font-weight: 500; transition: all 0.3s;"
-                                    placeholder="Nombre">
-                                <svg viewBox="0 0 24 24"
-                                    style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; fill: none; stroke: #1E293B; stroke-width: 2; opacity: 0.5;">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="12" cy="7" r="4"></circle>
-                                </svg>
-                            </div>
-
-                            <div style="position: relative; flex: 1;">
-                                <input type="text" id="apellido-registro" required
-                                    style="width: 100%; padding: 0.6rem 2rem 0.6rem 0; border: none; border-bottom: 2px solid rgba(30, 41, 59, 0.2); background: transparent; font-size: 0.95rem; color: #1E293B; outline: none; font-weight: 500; transition: all 0.3s;"
-                                    placeholder="Apellido">
-                                <svg viewBox="0 0 24 24"
-                                    style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; fill: none; stroke: #1E293B; stroke-width: 2; opacity: 0.5;">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="12" cy="7" r="4"></circle>
-                                </svg>
-                            </div>
-                        </div>
-
-                        <div style="position: relative;">
-                            <input type="email" id="email-registro" required
-                                style="width: 100%; padding: 0.6rem 2rem 0.6rem 0; border: none; border-bottom: 2px solid rgba(30, 41, 59, 0.2); background: transparent; font-size: 0.95rem; color: #1E293B; outline: none; font-weight: 500; transition: all 0.3s;"
-                                placeholder="Correo Electrónico">
-                            <svg viewBox="0 0 24 24"
-                                style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; fill: none; stroke: #1E293B; stroke-width: 2; opacity: 0.5;">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
-                                </path>
-                                <polyline points="22,6 12,13 2,6"></polyline>
-                            </svg>
-                        </div>
-
-                        <div style="position: relative;">
-                            <select id="genero-registro" required
-                                style="width: 100%; padding: 0.6rem 2rem 0.6rem 0; border: none; border-bottom: 2px solid rgba(30, 41, 59, 0.2); background: transparent; font-size: 0.95rem; color: #1E293B; outline: none; font-weight: 500; transition: all 0.3s; appearance: none; cursor: pointer;">
-                                <option value="" disabled selected>Género</option>
-                                <option value="Hombre">Hombre</option>
-                                <option value="Mujer">Mujer</option>
-                            </select>
-                            <svg viewBox="0 0 24 24"
-                                style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; fill: none; stroke: #1E293B; stroke-width: 2; opacity: 0.5;">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="9" cy="7" r="4"></circle>
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                            </svg>
-                        </div>
-
-                        <div style="position: relative;">
-                            <input type="password" id="pass-registro" required
-                                style="width: 100%; padding: 0.6rem 2rem 0.6rem 0; border: none; border-bottom: 2px solid rgba(30, 41, 59, 0.2); background: transparent; font-size: 0.95rem; color: #1E293B; outline: none; font-weight: 500; transition: all 0.3s;"
-                                placeholder="Contraseña">
-                            <svg viewBox="0 0 24 24"
-                                style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; fill: none; stroke: #1E293B; stroke-width: 2; opacity: 0.5;">
-                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                            </svg>
-                        </div>
-
-                        <button type="submit"
-                            style="width: 100%; padding: 1rem; background: #1E293B; color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 0.5rem; transition: all 0.3s; box-shadow: 0 10px 15px -3px rgba(30, 41, 59, 0.3);">Crear
-                            Cuenta</button>
-
-                        <p id="error-registro" class="mensaje-error"
-                            style="text-align: center; margin: 0; font-weight: 600;"></p>
-
-                        <p style="text-align: center; font-size: 0.95rem; color: #1E293B; margin-top: 0.5rem;">
-                            ¿Ya tienes cuenta? <a href="#" id="pestana-ingreso"
-                                style="font-weight: 800; color: #1E293B; text-decoration: none;">Inicia sesión</a>
-                        </p>
-                    </form>
-                </div>
-            </section>
-
-            <!-- Vista de Perfil -->
-            <section class="vista" id="vista-perfil"
-                style="background: linear-gradient(rgba(241, 245, 249, 0.95), rgba(241, 245, 249, 0.95)), url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2000&auto=format&fit=crop') center/cover fixed; display: flex; align-items: center; justify-content: center; padding-top: 110px;">
-
-                <div class="perfil-contenedor"
-                    style="position: relative; width: 90%; max-width: 800px; height: 75vh; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); display: flex; overflow: hidden; border: 1px solid rgba(255,255,255,1);">
-
-                    <button class="boton boton--icono" id="btn-cerrar-perfil"
-                        style="position: absolute; top: 20px; right: 20px; background: rgba(30, 41, 59, 0.1); color: #1E293B; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: all 0.2s; border: none; z-index: 20;">&times;</button>
-
-                    <!-- Sidebar Perfil -->
-                    <aside class="perfil-sidebar"
-                        style="width: 250px; background: rgba(248, 250, 252, 0.5); border-right: 1px solid rgba(226, 232, 240, 0.8); padding: 2rem;">
-                        <h3 style="font-size: 1.5rem; font-weight: 800; color: #0F172A; margin-bottom: 2rem;">
-                            Configuración</h3>
-
-                        <nav style="display: flex; flex-direction: column; gap: 0.5rem;">
-                            <a href="#"
-                                style="padding: 0.75rem 1rem; text-decoration: none; font-weight: 600; color: #3B82F6; background: rgba(59, 130, 246, 0.1); border-radius: 8px; border-left: 4px solid #3B82F6;">Cuenta</a>
-                        </nav>
-                    </aside>
-
-                    <!-- Main Content Perfil -->
-                    <div class="perfil-contenido" style="flex: 1; padding: 3rem; overflow-y: auto;">
-                        <h2 style="font-size: 2rem; font-weight: 700; color: #0F172A; margin-bottom: 2rem;">Ajustes de
-                            Cuenta</h2>
-
-                        <h4
-                            style="font-size: 1.1rem; font-weight: 700; color: #0F172A; margin-bottom: 1.5rem; border-bottom: 2px solid #E2E8F0; padding-bottom: 0.5rem;">
-                            Información Básica</h4>
-
-                        <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem;">
-                            <div
-                                style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; background: rgba(59, 130, 246, 0.1); color: #3B82F6;">
-                                <svg viewBox="0 0 24 24" width="40" height="40" stroke="currentColor" stroke-width="2"
-                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="12" cy="7" r="4"></circle>
-                                </svg>
-                            </div>
-                        </div>
-
-                        <div class="perfil-lista" style="display: flex; flex-direction: column;">
-                            <div
-                                style="display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid #E2E8F0;">
-                                <span style="color: #64748B; font-weight: 500; width: 30%;">Nombre</span>
-                                <span id="perfil-nombre-val"
-                                    style="color: #0F172A; font-weight: 600; flex: 1;">Cargando...</span>
-                            </div>
-                            <div
-                                style="display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid #E2E8F0;">
-                                <span style="color: #64748B; font-weight: 500; width: 30%;">Género</span>
-                                <span id="perfil-genero-val"
-                                    style="color: #0F172A; font-weight: 600; flex: 1;">Cargando...</span>
-                            </div>
-                            <div
-                                style="display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid #E2E8F0;">
-                                <span style="color: #64748B; font-weight: 500; width: 30%;">Correo Electrónico</span>
-                                <span id="perfil-email-val"
-                                    style="color: #0F172A; font-weight: 600; flex: 1;">Cargando...</span>
-                            </div>
-                        </div>
-
-                        <h4
-                            style="font-size: 1.1rem; font-weight: 700; color: #0F172A; margin-top: 3rem; margin-bottom: 1.5rem; border-bottom: 2px solid #E2E8F0; padding-bottom: 0.5rem;">
-                            Información de Acceso</h4>
-
-                        <div class="perfil-lista" style="display: flex; flex-direction: column;">
-                            <div
-                                style="display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid #E2E8F0;">
-                                <span style="color: #64748B; font-weight: 500; width: 30%;">Contraseña</span>
-                                <span style="color: #0F172A; font-weight: 600; flex: 1;">••••••••</span>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </section>
 
             <!-- Vista de Impresión / Mis Reservas -->
             <section class="vista" id="vista-mis-reservas"
-                style="background: linear-gradient(rgba(248, 250, 252, 0.9), rgba(248, 250, 252, 0.9)), url('https://images.unsplash.com/photo-1490430657723-4d607c1503fc?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat fixed;">
+                style="background: linear-gradient(rgba(248, 250, 252, 0.9), rgba(248, 250, 252, 0.9)), url('mis-reservas.avif') center/cover no-repeat fixed;">
                 <div class="contenedor">
                     <h2 class="vista__titulo">Mis Reservas</h2>
 
@@ -609,6 +315,17 @@
             </div>
         </footer>
     </main>
+    <!-- Modal de Alerta -->
+    <div id="modal-alerta" class="modal-alerta oculto">
+        <div class="modal-alerta__contenido">
+            <h3 class="modal-alerta__titulo">Atención</h3>
+            <p id="modal-alerta-mensaje" class="modal-alerta__mensaje"></p>
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button id="btn-modal-aceptar" class="boton boton--primario w-100">Aceptar</button>
+                <button id="btn-modal-cancelar" class="boton boton--secundario w-100 oculto">Cancelar</button>
+            </div>
+        </div>
+    </div>
 
     <script src="app.js"></script>
 </body>
